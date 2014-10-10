@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "sacps/version"
 
 Gem::Specification.new do |s|
-  s.name = "SacPS"
+  s.name = "sacps"
   s.version = SacPS::VERSION
   s.author = "Girts Kesteris"
   s.email = ["girts.kesteris@gmail.com"]
