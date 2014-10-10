@@ -1,3 +1,5 @@
+require 'sacps/auth/swedbank'
+
 module SacPS
   module Auth
     module Common
@@ -46,7 +48,16 @@ module SacPS
       end
 
       def generate_random_string length=6
-        ([0..9]­.map { |i| i.to_­a }.fla­tten).shuf­fle[0,length].j­oin
+        # ([('a'..'z­'), ('A'.­.'Z'), 0..9]­.map { |i| i.to_­a }.fla­tten).shuf­fle[0,length].j­oin
+        char_set = (0..9).to_a
+
+        result = ""
+
+        length.times do
+          result << char_set.sample
+        end
+        
+        result
       end
 
     end

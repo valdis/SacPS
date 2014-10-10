@@ -1,7 +1,7 @@
 module SacPS
   module Auth
     module Swedbank
-      module Notification
+      class Notification
         
       end
     end

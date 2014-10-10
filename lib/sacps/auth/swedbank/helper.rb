@@ -1,10 +1,10 @@
 module SacPS
   module Auth
     module Swedbank
-      module Helper
+      class Helper
         attr_reader :fields
         include SacPS::Auth::Common
-        
+
         # VK_SERVICE
         # VK_VERSION
         # VK_SND_ID

@@ -3,7 +3,8 @@
 require File.dirname(__FILE__) + '/test_helper'
 
 class SacPSAuthSwedbankHelperTest < Minitest::Test
-  def test_should_create_fields_for_1002
+  def test_should_create_fields_for_4002
+    
     options = {}
     options[:return] = 'http://myplace/'
 

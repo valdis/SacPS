@@ -13,3 +13,7 @@ require 'digest/md5'
 require 'openssl'
 
 require 'cgi'
+
+require 'sacps/sacps'
+require 'sacps/base'
+require 'sacps/auth'
