@@ -36,8 +36,6 @@ module SacPS
           'VK_REC_ID',
           'VK_NONCE',
           'VK_RETURN',
-          'VK_MAC',
-          'VK_ENCODING'
           ]
         }
 
