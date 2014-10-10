@@ -24,8 +24,8 @@ module SacPS
         Notification.new(post)
       end
 
-      def self.helper(order, account, options = {})
-        Helper.new(order, account, options)
+      def self.helper(account, options = {})
+        Helper.new(account, options)
       end
 
       self.required_service_params = {
