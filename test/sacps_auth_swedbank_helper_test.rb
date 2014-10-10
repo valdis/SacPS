@@ -9,7 +9,7 @@ class SacPSAuthSwedbankHelperTest < Minitest::Test
     options[:return] = 'http://myplace/'
 
     helper = SacPS::Auth::Swedbank::Helper.new('ACC1', options)
-    assert_equal 8, helper.form_fields.size
+    assert_equal 9, helper.form_fields.size
   end
 
 end
