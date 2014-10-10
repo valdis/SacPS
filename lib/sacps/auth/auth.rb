@@ -14,15 +14,9 @@ module SacPS
       # Parameters val1, val2, value3 would be turned into:
       # '003val1003val2006value3'
       def generate_data_string(service_msg_number, sigparams, required_service_params)
-        puts ">>>>>>>> #{service_msg_number} <<<<<<<<<<<<"
-        puts ">>>>>>>>> #{sigparams} <<<<<<<<<<<<"
-        puts ">>>>>>>>> #{required_service_params} <<<<<<<<<<<<"
-
         str = ''
         required_params = required_service_params[service_msg_number.to_i] || required_service_params[service_msg_number]
-
         
-
         required_params.each do |param|
           val = sigparams[param].to_s # nil goes to ''
           str << func_p(val) << val
@@ -54,14 +48,10 @@ module SacPS
 
       def generate_random_string length=6
         # ([('a'..'z­'), ('A'.­.'Z'), 0..9]­.map { |i| i.to_­a }.fla­tten).shuf­fle[0,length].j­oin
-        char_set = (0..9).to_a
+        char_set = ('0'..'9').to_a
 
         result = ""
-
-        length.times do
-          result << char_set.sample
-        end
-        
+        length.times { result << char_set.sample }
         result
       end
 
