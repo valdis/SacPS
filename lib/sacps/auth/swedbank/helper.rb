@@ -46,7 +46,7 @@ module SacPS
         end
 
         def add_mac
-          add_field('VK_MAC', generate_mac('4002', @fields, SacPS::Auth::Swedbank.required_service_params))
+          add_field('VK_MAC', generate_mac(4002, form_fields, SacPS::Auth::Swedbank.required_service_params))
         end
 
         def add_version
