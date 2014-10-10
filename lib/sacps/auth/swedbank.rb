@@ -35,10 +35,9 @@ module SacPS
           'VK_SND_ID',
           'VK_REC_ID',
           'VK_NONCE',
-          'VK_RETURN',
+          'VK_RETURN'
           ]
         }
-
     end
   end
 end

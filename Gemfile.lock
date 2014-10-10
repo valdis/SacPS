@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    SacPS (0.0.1)
+    sacps (0.0.1)
       activesupport
 
 GEM
@@ -25,6 +25,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  SacPS!
   minitest (>= 2)
   rake
+  sacps!

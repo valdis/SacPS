@@ -22,6 +22,7 @@ module SacPS
           @options['VK_RETURN'] = options[:return]
           @options['VK_NONCE'] = generate_random_string 50
           @options['VK_SERVICE'] = '4002'
+          @options['VK_LANG'] = "LAT"
 
           add_required_params
           add_mac
