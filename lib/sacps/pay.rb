@@ -1,5 +1,1 @@
-module SacPS
-  module Pay
-    
-  end
-end
+require 'sacps/pay/pay'
