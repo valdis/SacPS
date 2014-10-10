@@ -1,0 +1,3 @@
+sqlite:
+  :adapter: sqlite
+  :dbfile: vendor/plugins/sacps/test/sacps_plugin.sqlite.db

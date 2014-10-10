@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = "sacpay"
 
+  s.add_development_dependency 'minitest', '>= 2'
   s.add_development_dependency 'rake'
 
   s.add_dependency "activesupport"

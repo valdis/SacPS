@@ -46,7 +46,7 @@ module SacPS
       end
 
       def generate_random_string length=6
-        ([('a'..'z­'), ('A'.­.'Z'), 0..9]­.map { |i| i.to_­a }.fla­tten).shuf­fle[0,length].j­oin
+        ([0..9]­.map { |i| i.to_­a }.fla­tten).shuf­fle[0,length].j­oin
       end
 
     end

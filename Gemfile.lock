@@ -26,4 +26,5 @@ PLATFORMS
 
 DEPENDENCIES
   SacPS!
+  minitest (>= 2)
   rake
