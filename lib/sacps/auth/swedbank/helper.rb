@@ -14,7 +14,7 @@ module SacPS
         # VK_MAC
         # VK_ENCODING
         def initialize(account, options={})
-          @options = 
+          @options = {}
           @fields = {}
           
           @options['VK_SND_ID'] = account

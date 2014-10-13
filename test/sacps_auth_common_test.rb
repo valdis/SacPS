@@ -11,7 +11,6 @@ class SacPSAuthCommonTest < Minitest::Test
 
   def test_should_generate_random_string_with_correct_length
     result =  generate_random_string 50
-    puts "Random string -> #{result}"
     assert_equal 50, result.size 
   end
 
