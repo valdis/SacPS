@@ -32,12 +32,7 @@ module SacPS
         Helper.new(account, options)
       end
 
-      def get_X509_subject
-        cert = self.public_key
-        subject = OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).subject.to_s
-        subject[0] = ""
-        return subject.gsub("/",",")
-      end
+
 
       def sign_xml xml
         unsigned_document = Xmldsig::SignedDocument.new xml 
@@ -50,6 +45,19 @@ module SacPS
         signed_document = Xmldsig::SignedDocument.new signed_xml
         signed_document.validate(self.class.parent.get_public_key)
       end
+
+      protected
+        def get_public_key_subject
+          cert = self.public_key
+          subject = OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).subject.to_s
+          subject[0] = ""
+          return subject.gsub("/",",")
+        end
+
+        def get_public_key_as_string
+          cert = self.public_key
+          subject = OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
+        end
 
     end
   end

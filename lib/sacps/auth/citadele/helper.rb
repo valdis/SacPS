@@ -85,8 +85,7 @@ module SacPS
 
             xml.KeyInfo do
               xml.X509Data do
-                xml.X509SubjectName get_X509_subject
-                xml.X509Certificate SacPS::Auth::Citadele.get_public_key           
+                xml.X509Certificate get_public_key_as_string 
               end
             end
           end
