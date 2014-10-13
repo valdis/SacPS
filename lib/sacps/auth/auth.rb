@@ -24,15 +24,6 @@ module SacPS
         str
       end
 
-      def generate_signature(service_msg_number, sigparams, required_service_params)
-        privkey = self.class.parent.get_private_key
-        privkey.sign(OpenSSL::Digest::SHA1.new, generate_data_string(service_msg_number, sigparams, required_service_params))
-      end
-
-      def generate_mac(service_msg_number, sigparams, required_service_params)
-        Base64.encode64(generate_signature(service_msg_number, sigparams, required_service_params)).gsub(/\n/,'')
-      end
-
       def encode_to_utf8 string
         string.encode('UTF-8', :invalid => :replace, :replace => '').encode('UTF-8')
       end

@@ -4,6 +4,7 @@ module SacPS
       class Helper
         attr_reader :fields
         include SacPS::Auth::Common
+        include SacPS::Auth::Banklink
 
         # VK_SERVICE
         # VK_VERSION

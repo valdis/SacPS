@@ -1,4 +1,6 @@
+require 'sacps/auth/banklink'
 require 'sacps/auth/swedbank/helper'
+require 'sacps/auth/swedbank/notification'
 require 'sacps/auth/swedbank/notification'
 
 module SacPS
