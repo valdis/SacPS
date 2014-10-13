@@ -163,4 +163,4 @@ i02yWxFjh9NodTVRcdb4WBmSXprepw3G
 -----END CERTIFICATE-----
 EOF
 
-SacPS::Auth::Citadele.service_url = 'https://online.citadele.lv'
+SacPS::Auth::Citadele.service_url = 'https://online.citadele.lv/amai/start.htm'

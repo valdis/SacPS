@@ -74,9 +74,9 @@ module SacPS
               xml.SignatureMethod "Algorithm" => "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
               xml.Reference "URI" => "" do
                 
-                # xml.Transforms do
-                #   xml.Transform("Algorithm"=>"http://www.w3.org/2000/09/xmldsig#enveloped- signature")
-                # end
+                xml.Transforms do
+                  xml.Transform("Algorithm"=>"http://www.w3.org/2000/09/xmldsig#enveloped-signature")
+                end
 
                 xml.DigestMethod("Algorithm"=>"http://www.w3.org/2000/09/xmldsig#sha1")
                 xml.DigestValue
