@@ -1,15 +1,17 @@
 require 'sacps/auth/citadele/helper'
 require 'sacps/auth/citadele/notification'
 
+require 'xmldsig'
+
 module SacPS
   module Auth
     module Citadele
-      mattr_accessor :bank_certificate
+      mattr_accessor :public_key
       mattr_accessor :private_key
       mattr_accessor :service_url
 
       def self.get_public_key
-        cert = self.bank_certificate
+        cert = self.public_key
         OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
       end
 
@@ -26,18 +28,18 @@ module SacPS
         Helper.new(account, options)
       end
 
-      def canonicalize xml
-        xmldoc = Nokogiri::XML(xml, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::NOCDATA | Nokogiri::XML::ParseOptions::STRICT)
-        return xmldoc.canonicalize
+      def sign_xml xml
+        unsigned_document = Xmldsig::SignedDocument.new xml 
+        signed_xml = unsigned_document.sign self.class.parent.get_private_key
+        is_valid_xml = validate_xml signed_xml
+        return signed_xml, is_valid_xml
       end
 
-      def generate_signature
-        
-        # privkey = self.get_private_key
-        # privkey.sign(OpenSSL::Digest::SHA1.new, generate_data_string(service_msg_number, sigparams, required_service_params))
+      def validate_xml signed_xml
+        signed_document = Xmldsig::SignedDocument.new signed_xml
+        signed_document.validate(self.class.parent.get_public_key)
       end
 
-      
     end
   end
 end  

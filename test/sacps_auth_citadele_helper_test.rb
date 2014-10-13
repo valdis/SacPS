@@ -6,10 +6,10 @@ class SacPSAuthCitadeleHelperTest < Minitest::Test
   def test_should_create_fields
     
     options = {}
-    options[:return] = 'http://myplace/'
+    options[:return] = 'https://myplace/'
 
     helper = SacPS::Auth::Citadele::Helper.new('ACC1', options)
-    assert_equal 9, helper.form_fields.size
+    assert_equal true, helper.valid?
   end
 
 end
