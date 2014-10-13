@@ -6,13 +6,13 @@ module SacPS
   module Auth
     module Swedbank
 
-      mattr_accessor :bank_certificate
+      mattr_accessor :public_key
       mattr_accessor :private_key
       mattr_accessor :required_service_params
       mattr_accessor :service_url
 
       def self.get_public_key
-        cert = self.bank_certificate
+        cert = self.public_key
         OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
       end
 
