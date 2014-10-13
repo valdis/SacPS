@@ -21,7 +21,6 @@ module SacPS
           @options['language'] = options[:language] || "LV"
 
           @doc = build_xml
-          puts " >>> AFTER BUILD <<<"
           puts @doc
           
           @final_xml, @valid_xml = sign_xml @doc
@@ -29,7 +28,6 @@ module SacPS
           # puts "___________"
           # puts canonicalized_doc
 
-          puts @final_xml
         end
 
         def valid?
@@ -87,8 +85,8 @@ module SacPS
 
             xml.KeyInfo do
               xml.X509Data do
-                xml.X509SubjectName 
-                xml.X509Certificate                   
+                xml.X509SubjectName get_X509_subject
+                xml.X509Certificate SacPS::Auth::Citadele.get_public_key           
               end
             end
           end

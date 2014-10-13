@@ -20,12 +20,23 @@ module SacPS
         OpenSSL::PKey::RSA.new(private_key.gsub(/  /, ''))
       end
 
+      def self.get_X509_subject
+        self.get_private_key.X509SubjectName
+      end
+
       def self.notification(post)
         Notification.new(post)
       end
 
       def self.helper(account, options = {})
         Helper.new(account, options)
+      end
+
+      def get_X509_subject
+        cert = self.public_key
+        subject = OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).subject.to_s
+        subject[0] = ""
+        return subject.gsub("/",",")
       end
 
       def sign_xml xml
