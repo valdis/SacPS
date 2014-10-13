@@ -1,20 +1,13 @@
-require 'builder'
+require "builder"
+require "nokogiri"
+
 module SacPS
   module Auth
     module Citadele
       class Helper
         attr_reader :fields
         include SacPS::Auth::Common
-
-        # production
-        # timestamp
-        # from
-        # request
-        # requestUID
-        # version
-        # language
-        # signature
-        # certificate
+        include SacPS::Auth::Citadele
 
         def initialize(account, options={})
           @options = {}
@@ -27,7 +20,11 @@ module SacPS
           @options['return_url'] = options[:return]
           @options['language'] = options[:language] || "LV"
 
-          puts build_xml
+          @doc = build_xml
+          puts @doc
+          puts "___________"
+          canonicalize_doc!
+          puts @doc
         end
 
         def form_fields
@@ -42,7 +39,7 @@ module SacPS
           xml.instruct!
           
           xml.FIDAVISTA("xmlns" => "http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1", "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation" => "http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1 http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1/fidavista.xsd") do
-            xml.header do
+            xml.Header do
               xml.Timestamp @options['timestamp']
               xml.From @options['from']
               xml.Extension do
@@ -60,6 +57,11 @@ module SacPS
 
           return doc
         end
+
+        def canonicalize_doc!
+          @doc = Nokogiri::XML(@doc, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::NOCDATA | Nokogiri::XML::ParseOptions::STRICT).canonicalize
+        end
+
 
         def version
           "2.0"

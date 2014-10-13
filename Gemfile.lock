@@ -4,6 +4,7 @@ PATH
     sacps (0.0.1)
       activesupport
       builder (>= 2.0)
+      nokogiri
 
 GEM
   remote: https://rubygems.org/
@@ -17,7 +18,10 @@ GEM
     builder (3.2.2)
     i18n (0.6.11)
     json (1.8.1)
+    mini_portile (0.6.0)
     minitest (5.4.2)
+    nokogiri (1.6.3.1)
+      mini_portile (= 0.6.0)
     rake (10.1.1)
     thread_safe (0.3.4)
     tzinfo (1.2.2)

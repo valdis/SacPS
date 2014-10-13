@@ -1,6 +1,7 @@
 module SacPS
   module Auth
     module Banklink
+      
       def generate_signature(service_msg_number, sigparams, required_service_params)
         privkey = self.class.parent.get_private_key
         privkey.sign(OpenSSL::Digest::SHA1.new, generate_data_string(service_msg_number, sigparams, required_service_params))
