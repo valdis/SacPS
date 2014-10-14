@@ -25,6 +25,7 @@ module SacPS
           @doc, @built_valid_xml = sign_xml @doc
           form_signature_ds!
           canonicalize!
+          puts @doc
         end
 
         def valid?
@@ -89,9 +90,11 @@ module SacPS
         end
 
         def form_signature_ds!
-          ["Signature", "SignedInfo", "CanonicalizationMethod", "SignatureMethod", "Reference", "Transforms", "Transform", "DigestMethod", "DigestValue", "KeyInfo", "X509Data", "X509Certificate"].each do |signature_data| 
+          ["Signature", "SignedInfo", "CanonicalizationMethod", "Reference", "Transforms", "Transform", "DigestMethod", "DigestValue", "KeyInfo", "X509Data", "X509Certificate"].each do |signature_data| 
             @doc = @doc.gsub(signature_data, "ds:#{signature_data}")
           end
+          @doc = @doc.gsub "ds:SignatureData", "SignatureData"
+          @doc = @doc.gsub "ds:ds:", "ds:"
         end
 
         def canonicalize!
