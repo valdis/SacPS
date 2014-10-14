@@ -1,6 +1,6 @@
 module SacPS
   module Auth
-    module Swedbank
+    module Seb
       class Notification
         include SacPS::Auth::Common 
         
@@ -14,11 +14,11 @@ module SacPS
         end
 
         def user_information
-          params['VK_INFO']
+          params['IB_USER_INFO']
         end
 
         def language
-          case params['VK_LANG']
+          case params['IB_LANG']
           when "LAT"
             return "lv"
           when "ENG"
@@ -29,7 +29,6 @@ module SacPS
             return "lv"
           end
         end
-
 
         private
           def emptify!

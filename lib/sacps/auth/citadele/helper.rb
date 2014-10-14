@@ -25,7 +25,6 @@ module SacPS
           @doc, @built_valid_xml = sign_xml @doc
           form_signature_ds!
           canonicalize!
-          puts @doc
         end
 
         def valid?

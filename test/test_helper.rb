@@ -33,6 +33,10 @@ SacPS::Auth::Swedbank.identifier = 'ACC1'
 SacPS::Auth::Swedbank.service_url = 'https://ib.swedbank.lv'
 SacPS::Auth::Swedbank.return_url = 'http://www.myplace.com'
 
+SacPS::Auth::Seb.identifier = 'ACC1'
+SacPS::Auth::Seb.service_url = 'https://ibanka.seb.lv/ipc/epakindex.jsp'
+#NO RETURN URL
+
 SacPS::Auth::Citadele.identifier = 'ACC1'
 SacPS::Auth::Citadele.service_url = 'https://online.citadele.lv/amai/start.htm'
 SacPS::Auth::Citadele.return_url = 'http://www.myplace.com'
@@ -167,5 +171,13 @@ Gbhw8XRx6vks2T6yhAHDaCK+jOwLakW9pmheVG4DFxqSKXaLRQm+KOGQMhBzNKFO
 mkqsF3eDhhx538HVDzbiqye7R21GhnCCZoEiPC0UcHDOKm3Yow3yQ64NON74lQCM
 i02yWxFjh9NodTVRcdb4WBmSXprepw3G
 -----END CERTIFICATE-----
+EOF
+
+SacPS::Auth::Seb.private_key = <<EOF
+
+EOF
+
+SacPS::Auth::Seb.public_key = <<EOF
+
 EOF
 
