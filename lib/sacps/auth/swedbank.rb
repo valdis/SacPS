@@ -5,11 +5,12 @@ require 'sacps/auth/swedbank/notification'
 module SacPS
   module Auth
     module Swedbank
-
       mattr_accessor :public_key
       mattr_accessor :private_key
-      mattr_accessor :required_service_params
+      mattr_accessor :identifier
       mattr_accessor :service_url
+      mattr_accessor :return_url
+      mattr_accessor :required_service_params
 
       def self.get_public_key
         cert = self.public_key

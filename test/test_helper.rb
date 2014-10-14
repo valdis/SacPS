@@ -29,6 +29,15 @@ def load_schema
   load(File.dirname(__FILE__) + "/schema.rb")
 end
 
+SacPS::Auth::Swedbank.identifier = 'ACC1'
+SacPS::Auth::Swedbank.service_url = 'https://ib.swedbank.lv'
+SacPS::Auth::Swedbank.return_url = 'http://www.myplace.com'
+
+SacPS::Auth::Citadele.identifier = 'ACC1'
+SacPS::Auth::Citadele.service_url = 'https://online.citadele.lv/amai/start.htm'
+SacPS::Auth::Citadele.return_url = 'http://www.myplace.com'
+
+#BEGIN CERTS
 SacPS::Auth::Swedbank.private_key = <<EOF
 -----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQC+AROlXiRvi1T7Q9fAh0Lw73szAn26mqfKDqd6Bdplq3v+gVWC
@@ -69,9 +78,6 @@ eD4D1UFM1qdp2VZzhBd1eeMjxYjCP8qL2v2MfLkCYcP30Sl6ISSkFjFc5qbGXZOc
 C82uR/wUZJDw9kj+R1O46/byG8yA+S9FVw==
 -----END CERTIFICATE-----
 EOF
-
-SacPS::Auth::Swedbank.service_url = 'https://ib.swedbank.lv'
-
 
 SacPS::Auth::Citadele.private_key = <<EOF
 -----BEGIN RSA PRIVATE KEY-----
@@ -163,4 +169,3 @@ i02yWxFjh9NodTVRcdb4WBmSXprepw3G
 -----END CERTIFICATE-----
 EOF
 
-SacPS::Auth::Citadele.service_url = 'https://online.citadele.lv/amai/start.htm'

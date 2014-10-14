@@ -8,7 +8,9 @@ module SacPS
     module Citadele
       mattr_accessor :public_key
       mattr_accessor :private_key
+      mattr_accessor :identifier
       mattr_accessor :service_url
+      mattr_accessor :return_url
 
       def self.get_public_key
         cert = self.public_key

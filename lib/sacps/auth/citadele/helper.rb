@@ -10,15 +10,15 @@ module SacPS
         include SacPS::Auth::Common
         include SacPS::Auth::Citadele
 
-        def initialize(account, options={})
+        def initialize options={}
           @options = {}
           @fields = {}
           
-          @options['from'] = account
+          @options['from'] = SacPS::Auth::Citadele.identifier
           @options['timestamp'] = Time.now.strftime("%Y%m%d%H%M%S%3N")
           @options['request'] = request
           @options['requestUID'] = generate_random_string 30
-          @options['return_url'] = options[:return]
+          @options['return_url'] = SacPS::Auth::Citadele.return_url
           @options['language'] = options[:language] || "LV"
 
           @doc = build_xml

@@ -14,13 +14,13 @@ module SacPS
         # VK_RETURN
         # VK_MAC
         # VK_ENCODING
-        def initialize(account, options={})
+        def initialize options={}
           @options = {}
           @fields = {}
           
-          @options['VK_SND_ID'] = account
-          @options['VK_REC_ID'] = account
-          @options['VK_RETURN'] = options[:return]
+          @options['VK_SND_ID'] = SacPS::Auth::Citadele.identifier
+          @options['VK_REC_ID'] = SacPS::Auth::Citadele.identifier
+          @options['VK_RETURN'] = SacPS::Auth::Swedbank.return_url
           @options['VK_NONCE'] = generate_random_string 50
           @options['VK_SERVICE'] = '4002'
           @options['VK_LANG'] = "LAT"
