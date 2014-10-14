@@ -22,7 +22,6 @@ module SacPS
           @options['VK_REC_ID'] = SacPS::Auth::Swedbank.identifier
           @options['VK_RETURN'] = SacPS::Auth::Swedbank.return_url
           @options['VK_NONCE'] = generate_random_string 50
-          @options['VK_SERVICE'] = service.to_s
           @options['VK_LANG'] = options[:language] || "LAT"
 
           add_required_params
@@ -35,7 +34,7 @@ module SacPS
         end
 
         def add_required_params
-          required_params = SacPS::Auth::Swedbank.required_service_params[service]
+          required_params = SacPS::Auth::Swedbank.required_service_params[vk_service]
           required_params.each do |param|
             param_value = (@options.delete(param) || send(param.to_s.downcase)).to_s
             add_field param, encode_to_utf8(param_value)
@@ -48,7 +47,7 @@ module SacPS
         end
 
         def add_mac
-          add_field('VK_MAC', generate_mac(service, form_fields, SacPS::Auth::Swedbank.required_service_params))
+          add_field('VK_MAC', generate_mac(vk_service, form_fields, SacPS::Auth::Swedbank.required_service_params))
         end
 
         def add_version
@@ -63,7 +62,7 @@ module SacPS
           '008'
         end
 
-        def service
+        def vk_service
           4002
         end
 
