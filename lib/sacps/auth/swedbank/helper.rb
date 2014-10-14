@@ -18,8 +18,8 @@ module SacPS
           @options = {}
           @fields = {}
           
-          @options['VK_SND_ID'] = SacPS::Auth::Citadele.identifier
-          @options['VK_REC_ID'] = SacPS::Auth::Citadele.identifier
+          @options['VK_SND_ID'] = SacPS::Auth::Swedbank.identifier
+          @options['VK_REC_ID'] = SacPS::Auth::Swedbank.identifier
           @options['VK_RETURN'] = SacPS::Auth::Swedbank.return_url
           @options['VK_NONCE'] = generate_random_string 50
           @options['VK_SERVICE'] = '4002'
