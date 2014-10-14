@@ -1,4 +1,5 @@
 require "builder"
+require "nokogiri"
 
 module SacPS
   module Auth
@@ -89,6 +90,10 @@ module SacPS
               end
             end
           end
+        end
+
+        def canonicalize_doc!
+          @doc = Nokogiri::XML(@doc, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::NOCDATA | Nokogiri::XML::ParseOptions::STRICT).canonicalize
         end
 
         def version

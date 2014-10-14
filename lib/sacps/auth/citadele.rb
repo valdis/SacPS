@@ -32,8 +32,6 @@ module SacPS
         Helper.new(account, options)
       end
 
-
-
       def sign_xml xml
         unsigned_document = Xmldsig::SignedDocument.new xml 
         signed_xml = unsigned_document.sign self.class.parent.get_private_key
@@ -47,16 +45,17 @@ module SacPS
       end
 
       protected
-        def get_public_key_subject
-          cert = self.public_key
-          subject = OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).subject.to_s
-          subject[0] = ""
-          return subject.gsub("/",",")
-        end
 
         def get_public_key_as_string
           cert = self.public_key
-          subject = OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
+          public_key = OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key.to_s
+
+          normalized_public_key = ""
+          public_key.split(/\r?\n/).each {|line| normalized_public_key << line }
+
+          normalized_public_key = normalized_public_key.gsub("-----BEGIN PUBLIC KEY-----","").gsub("-----END PUBLIC KEY-----","")
+
+          return normalized_public_key
         end
 
     end
