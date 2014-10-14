@@ -18,8 +18,8 @@ module SacPS
           @options = {}
           @fields = {}
 
-          @options['VK_SND_ID'] = SacPS::Auth::Swedbank.identifier
-          @options['VK_RETURN'] = SacPS::Auth::Swedbank.return_url
+          @options['VK_SND_ID'] = SacPS::Auth::Dnb.identifier
+          @options['VK_RETURN'] = SacPS::Auth::Dnb.return_url
           @options['VK_STAMP'] = generate_random_string 30
           @options['VK_LANG'] = options[:language] || "LAT"
 
