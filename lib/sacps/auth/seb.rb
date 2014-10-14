@@ -5,10 +5,11 @@ require 'sacps/auth/seb/notification'
 module SacPS
   module Auth
     module Seb
-      # mattr_accessor :public_key
-      # mattr_accessor :private_key=
+      mattr_accessor :public_key
+      mattr_accessor :private_key
       mattr_accessor :identifier
       mattr_accessor :service_url
+      mattr_accessor :required_service_params
 
       def self.get_public_key
         cert = self.public_key
@@ -28,13 +29,11 @@ module SacPS
         Helper.new options
       end
 
-      def self.required_service_params
-        [
-          'IB_SND_ID',
-          'IB_SERVICE',
-          'IB_LANG'
-        ]
-      end
+      self.required_service_params = [
+        'IB_SND_ID',
+        'IB_SERVICE',
+        'IB_LANG'
+      ]
 
     end
   end
