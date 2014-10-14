@@ -6,7 +6,7 @@ class SacPSAuthSwedbankHelperTest < Minitest::Test
   def test_should_create_fields
     
     helper = SacPS::Auth::Swedbank.helper
-    assert_equal 8, helper.form_fields.size
+    assert_equal 9, helper.form_fields.size
   end
 
 end

@@ -26,6 +26,7 @@ module SacPS
 
           add_required_params
           add_mac
+          add_lang
           add_encoding
         end
 
@@ -48,6 +49,10 @@ module SacPS
 
         def add_mac
           add_field('VK_MAC', generate_mac(vk_service, form_fields, SacPS::Auth::Swedbank.required_service_params))
+        end
+
+        def add_lang
+          add_field('VK_LANG', @options['VK_LANG'])
         end
 
         def add_version
