@@ -5,8 +5,8 @@ require 'sacps/auth/seb/notification'
 module SacPS
   module Auth
     module Seb
-      mattr_accessor :public_key
-      mattr_accessor :private_key
+      # mattr_accessor :public_key
+      # mattr_accessor :private_key=
       mattr_accessor :identifier
       mattr_accessor :service_url
 
