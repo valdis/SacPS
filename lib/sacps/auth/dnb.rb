@@ -1,10 +1,10 @@
 require 'sacps/auth/banklink'
-require 'sacps/auth/swedbank/helper'
-require 'sacps/auth/swedbank/notification'
+require 'sacps/auth/dnb/helper'
+require 'sacps/auth/dnb/notification'
 
 module SacPS
   module Auth
-    module Swedbank
+    module Dnb
       mattr_accessor :public_key
       mattr_accessor :private_key
       mattr_accessor :identifier
@@ -31,15 +31,15 @@ module SacPS
       end
 
       self.required_service_params = {
-        4002 => [
+        3001 => [
           'VK_SERVICE',
           'VK_VERSION',
           'VK_SND_ID',
-          'VK_REC_ID',
-          'VK_NONCE',
-          'VK_RETURN'
+          'VK_STAMP',
+          'VK_RETURN',
           ]
       }
+
     end
   end
 end

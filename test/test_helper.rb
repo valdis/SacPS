@@ -41,6 +41,11 @@ SacPS::Auth::Citadele.identifier = 'ACC1'
 SacPS::Auth::Citadele.service_url = 'https://online.citadele.lv/amai/start.htm'
 SacPS::Auth::Citadele.return_url = 'http://www.myplace.com'
 
+SacPS::Auth::Dnb.identifier = 'ACC1'
+SacPS::Auth::Dnb.service_url = 'https://ib.dnb.lv/login/index.php'
+SacPS::Auth::Dnb.return_url = 'http://www.myplace.com'
+
+
 #BEGIN CERTS
 SacPS::Auth::Swedbank.private_key = <<EOF
 -----BEGIN RSA PRIVATE KEY-----
@@ -179,5 +184,54 @@ EOF
 
 SacPS::Auth::Seb.public_key = <<EOF
 
+EOF
+
+
+SacPS::Auth::Dnb.private_key = <<EOF
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEA2TLiZYNWt6YllcL24WuCmoF1Y0m5jsJh60zQO16LhpzxlIwa
+7iFbt9vYEad2LPp2eoWdzUQhauYpo2rTUbA4KWKcuntqSYojey/Fhwmd4WUKRDg/
+QZfVCtwTUlbc3HIw17CKcXNt0YLaCQtz/6CY/y8VpsPCnQetxNKedG3mtqgiVkkl
+sXBExM+O6B9X2CKTCjc5MzcCNtCcYHCitCTdXeE+G/1ClpUEiOtCTsQm+0jThvdF
+zcrS2lfC+Jgz3e8P3cIVzIsfWhX0obN6oS4mfVP3S1htpQy0nqMMIBgyIj8D1m+8
+s6X/S/sy0TkDCEgfFe2FMiScFdAfMeBH6JaBrwIDAQABAoIBAAFIVqPo0aNF/OTU
+gOa13tCQwSOz9L+OEEv2aShgl4xU8uxAo4wScFs2liEMjxsW44o3rcXfiB78evR3
+FgZedwZviaNkRS1n/mukzZLNkLwa/6OFfYIipmRpBkgvMSCwH++2ICspVlWtYyI4
+ihfRV/Xxzjvs3gJVYEZQRBVF7N3ZP4fBUKcPtQRsFNMKsMzyaDPa+VAlHjNMJA7P
+xGqtcvfVp2kIQgWsPyf3OTxGGsYY3nSTF0IdIOamdu3lqj8FSPncVGnEY2QZXPLF
+iV2gFC9Ei0z9rocIqfSSxavaZXIzFlQP/203+s/5EjkaOtgzRYJrvBW2muQmqm4v
+HPZHCqECgYEA/f8b4V+NI+t212K1adKw+AEmdL1T/1UQtMtB6fKh7ndRgq1/99o4
++1hozeSQ4aEGupITqDdTVFn0xrR7dTA1E3ro7MQsQ+BL28qP0yWXaMDgP9ROk+AV
+7tSsCMpTl9wvDSs3Ke04vqxHAMZ3ZfAVsIq1WnYtuNun1xY5Go2/Az8CgYEA2ul4
+aHQMFtdL/DxO6aFrjaHBRrJ1orCSsAxeMtbEp+6/3A139sVxUSb/WE2H6UVTl6vD
+UA6aizdhR3AKIMnRzVLFIlqHGqhBzAR2QC6PlyPTQgaYZDX0Ij3oTFkH4KjvM218
+YlewCxLhtZC9rgJKcBIA7ZR6yZcPa+2ma0b+lZECgYEAyLni/qjUkZ5zvKN1Wrv2
+vweprHgy+YXwPfCjlo75CcuhzvPuPaFnhrrHmG8ZUDZBaxAmGLogUHkGyEG5j1MZ
+nttzWClwEfQf/wKFxwfeMBq9HbRapOJicuv/SLMcfNa1GGMepTOjtIvRUPuHQDgL
+7AiyaVsbpwtwCLq3RhTe72ECgYEAgkOnqNBVWUooJyJj+tZZP+BfOIh9Q6A6yZOy
+giIWx69kb7d8CVYYRigkjhEkrQTZ50kIYh0ujWUY9/+Np1ExDTMRp42jE5PIA3Us
+QKj0PQXOcl2mVQteCPo5vyTDcUZVgI7IE2UGlrBXq0lD9cXbMbEk6DsQjeDcBmdW
+PkPyvmECgYEAloeBQybP4e7+S/B3GEn3U6GwPHFhxyS1b1WZeOgr9s98RhxEy9Vv
+eBBVyWPhIm1qRS+zV8ZrxgaJ8Iay7CMW27HighCFmkVukYFxLz8tbmZ5XG27z027
+RBXFnnNxr4VtRs5sYySwtx6uiIpuqKsoTyKW6inC95pu5qxFKwNbgio=
+-----END RSA PRIVATE KEY-----
+EOF
+
+SacPS::Auth::Dnb.public_key = <<EOF
+-----BEGIN CERTIFICATE-----
+MIICsDCCAZgCAidPMA0GCSqGSIb3DQEBBQUAMBUxEzARBgNVBAMTCmlOT1JEIExpbmswHhcNMTIw
+ODA5MTAyODE2WhcNMTUwODA5MTAyODE2WjAmMSQwIgYDVQQDExtpTk9SRCBMaW5rIGZvciBNYW5h
+QmFsc3MubHYwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDA0o3nIumfRztAWiu95im+
+Hu5NSUnv4vgok13a2DrudI50ik0cUR6p5hkFAc6ivcHfUifAWmyhA1PTgcpkyzEzcMRAHdxm32BG
+0q5T1/pZqOyQ5e2dlit/ht0/E43kEitLK3qF2F1cHf7aMifGFO+fn5T2q2v1CT6h0klYZIQ6v8jW
+SNcYQVwtfetQlVqSVJMEmimBielEmbZG+RzMspTUF8//tXlHwQH116BV+zolZFxOi3jl6djzDxOr
+0KqVHH5EmIYRYhOJXzCnknmuAUgvUXVOMbQklMXRJO0PuKfCVPHADif4cuomDKdaUjB+1ohemjAZ
+Y5QmxPinGuF136+ZAgMBAAEwDQYJKoZIhvcNAQEFBQADggEBAJnjlJ6v6VIZjUfL9RsexCZUvSmf
+xNBo2KTNnsNqMwZNW/lOrrWNMnUPDmDPZAUK4X121CEGCu8F8cHpjbHlN/VDNY4aOicJAHDxIhVg
+5gXZ0ArO2UAho0C3Jn3gmE4tl60AsALtUoW37Afv6DlUYXbwL2rH3o4wdV5qrtibyOl56sZa8ySs
+ZIwxElbF0+5qQ9ZxZV8TgeeyaDHqdIAePKhl8DJdfxloPIizaCL6zckrteIINCfhvleKxpSMumbE
+2cueKjDAVdR85/m/xeLeUtiYcZKj890cqCH95ymDP8jPe9l/K0wmsEu4V7XLMvBkv6w+CpHx5AJL
+A1Nl8iRhloI=
+-----END CERTIFICATE-----
 EOF
 
