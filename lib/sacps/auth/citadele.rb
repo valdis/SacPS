@@ -34,7 +34,12 @@ module SacPS
 
       def sign_xml xml
         unsigned_document = Xmldsig::SignedDocument.new xml 
-        signed_xml = unsigned_document.sign self.class.parent.get_private_key
+        # signed_xml = unsigned_document.sign self.class.parent.get_private_key
+
+        signed_xml = unsigned_document.sign do |data|
+          self.class.parent.get_private_key.sign(OpenSSL::Digest::SHA1.new, data)
+        end
+
         is_valid_xml = validate_xml signed_xml
         return signed_xml, is_valid_xml
       end

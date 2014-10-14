@@ -22,21 +22,17 @@ module SacPS
           @options['language'] = options[:language] || "LV"
 
           @doc = build_xml
-          puts @doc
-          
-          @final_xml, @valid_xml = sign_xml @doc
-
-          # puts "___________"
-          # puts canonicalized_doc
-
+          @doc, @built_valid_xml = sign_xml @doc
+          form_signature_ds!
+          canonicalize!
         end
 
         def valid?
-          @valid_xml
+          @built_valid_xml
         end
 
         def xml
-          @final_xml
+          @doc
         end
 
         def build_xml
@@ -92,8 +88,17 @@ module SacPS
           end
         end
 
-        def canonicalize_doc!
-          @doc = Nokogiri::XML(@doc, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::NOCDATA | Nokogiri::XML::ParseOptions::STRICT).canonicalize
+        def form_signature_ds!
+          ["Signature", "SignedInfo", "CanonicalizationMethod", "SignatureMethod", "Reference", "Transforms", "Transform", "DigestMethod", "DigestValue", "KeyInfo", "X509Data", "X509Certificate"].each do |signature_data| 
+            @doc = @doc.gsub(signature_data, "ds:#{signature_data}")
+          end
+        end
+
+        def canonicalize!
+          doc = Nokogiri::XML(@doc, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::NOCDATA | Nokogiri::XML::ParseOptions::STRICT).canonicalize
+          xml = '<?xml version="1.0" encoding="UTF-8"?>' + "\n"
+          doc.split(/\r?\n/).each {|line| xml << line}
+          @doc = xml
         end
 
         def version
