@@ -26,12 +26,12 @@ module SacPS
         self.get_private_key.X509SubjectName
       end
 
-      def self.notification(post)
-        Notification.new(post)
+      def self.notification post 
+        Notification.new post 
       end
 
-      def self.helper(account, options = {})
-        Helper.new(account, options)
+      def self.helper options={}
+        Helper.new options
       end
 
       def sign_xml xml

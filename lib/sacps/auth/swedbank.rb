@@ -22,12 +22,12 @@ module SacPS
         OpenSSL::PKey::RSA.new(private_key.gsub(/  /, ''))
       end
 
-      def self.notification(post)
-        Notification.new(post)
+      def self.notification post
+        Notification.new post
       end
 
-      def self.helper(account, options = {})
-        Helper.new(account, options)
+      def self.helper options={}
+        Helper.new options
       end
 
       self.required_service_params = {
