@@ -5,21 +5,9 @@ require 'sacps/auth/seb/notification'
 module SacPS
   module Auth
     module Seb
-      mattr_accessor :public_key
-      mattr_accessor :private_key
       mattr_accessor :identifier
       mattr_accessor :service_url
       mattr_accessor :required_service_params
-
-      def self.get_public_key
-        cert = self.public_key
-        OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
-      end
-
-      def self.get_private_key
-        private_key = self.private_key
-        OpenSSL::PKey::RSA.new(private_key.gsub(/  /, ''))
-      end
 
       def self.notification post
         Notification.new post

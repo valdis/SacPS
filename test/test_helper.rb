@@ -184,15 +184,6 @@ i02yWxFjh9NodTVRcdb4WBmSXprepw3G
 -----END CERTIFICATE-----
 EOF
 
-SacPS::Auth::Seb.private_key = <<EOF
-
-EOF
-
-SacPS::Auth::Seb.public_key = <<EOF
-
-EOF
-
-
 SacPS::Auth::Dnb.private_key = <<EOF
 -----BEGIN RSA PRIVATE KEY-----
 MIIEpQIBAAKCAQEA2TLiZYNWt6YllcL24WuCmoF1Y0m5jsJh60zQO16LhpzxlIwa
