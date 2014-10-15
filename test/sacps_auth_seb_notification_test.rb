@@ -9,9 +9,20 @@ class SacPSAuthSebNotificationtest < Minitest::Test
     @seb_auth = SacPS::Auth::Seb.notification(http_raw_data)
   end
 
-  def test_accessors
-    assert_equal "PERSON:050505-12123;NAME:JOHN DOE", @seb_auth.user_information
-    assert_equal "lv", @seb_auth.language
+  def test_user_information
+    assert_equal "050505-12123;JOHN DOE", @seb_auth.user_information
+  end
+
+  def test_user_name
+    assert_equal "JOHN DOE", @seb_auth.user_name
+  end
+
+  def test_user_identifier
+    assert_equal "050505-12123", @seb_auth.user_identifier
+  end
+
+  def test_user_language
+    assert_equal "lv", @seb_auth.user_language
   end
 
   private

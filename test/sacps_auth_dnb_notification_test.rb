@@ -6,12 +6,23 @@ class SacPSAuthDnbNotificationtest < Minitest::Test
   # include Banklink
 
   def setup
-    @dnb = SacPS::Auth::Dnb.notification(http_raw_data)
+    @dnb_auth = SacPS::Auth::Dnb.notification(http_raw_data)
   end
 
-  def test_accessors
-    assert_equal "PERSON:050505-12123;NAME:JOHN DOE", @dnb.user_information
-    assert_equal "lv", @dnb.language
+  def test_user_information
+    assert_equal "050505-12123;JOHN DOE", @dnb_auth.user_information
+  end
+
+  def test_user_name
+    assert_equal "JOHN DOE", @dnb_auth.user_name
+  end
+
+  def test_user_identifier
+    assert_equal "050505-12123", @dnb_auth.user_identifier
+  end
+
+  def test_user_language
+    assert_equal "lv", @dnb_auth.user_language
   end
 
   private

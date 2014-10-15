@@ -9,9 +9,20 @@ class SacPSAuthSwedbankNotificationtest < Minitest::Test
     @swedbank_auth = SacPS::Auth::Swedbank.notification(http_raw_data)
   end
 
-  def test_accessors
-    assert_equal "PERSON:050505-12123;NAME:JOHN DOE", @swedbank_auth.user_information
-    assert_equal "lv", @swedbank_auth.language
+  def test_user_information
+    assert_equal "050505-12123;JOHN DOE", @swedbank_auth.user_information
+  end
+
+  def test_user_name
+    assert_equal "JOHN DOE", @swedbank_auth.user_name
+  end
+
+  def test_user_identifier
+    assert_equal "050505-12123", @swedbank_auth.user_identifier
+  end
+
+  def test_user_language
+    assert_equal "lv", @swedbank_auth.user_language
   end
 
   private

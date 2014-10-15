@@ -14,7 +14,19 @@ module SacPS
         end
 
         def user_information
-          "PERSON:#{params['B02K_CUSTID']};NAME:#{params['B02K_CUSTNAME']}"
+          identifier = params['B02K_CUSTID']
+
+          identifier = identifier.split(//).first(6).join+"-"+identifier.split(//).last(5).join
+
+          "#{identifier};#{params['B02K_CUSTNAME']}"
+        end
+
+        def user_identifier
+          user_information.split(";").first
+        end
+
+        def user_name
+          user_information.split(";").last
         end
 
         private

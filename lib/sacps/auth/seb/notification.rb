@@ -14,10 +14,21 @@ module SacPS
         end
 
         def user_information
-          params['IB_USER_INFO']
+          data = params['IB_USER_INFO'].split(";")
+          identifier = data.first.split(":").last
+          name = data.last.split(":").last
+          return "#{identifier};#{name}"
         end
 
-        def language
+        def user_identifier
+          user_information.split(";").first
+        end
+
+        def user_name
+          user_information.split(";").last
+        end
+
+        def user_language
           case params['IB_LANG']
           when "LAT"
             return "lv"

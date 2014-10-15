@@ -14,10 +14,18 @@ module SacPS
         end
 
         def user_information
-          "PERSON:#{params['VK_PER_CODE']};NAME:#{params['VK_PER_FNAME']} #{params['VK_PER_LNAME']}"
+          "#{params['VK_PER_CODE']};#{params['VK_PER_FNAME']} #{params['VK_PER_LNAME']}"
         end
 
-        def language
+        def user_identifier
+          user_information.split(";").first
+        end
+
+        def user_name
+          user_information.split(";").last
+        end
+
+        def user_language
           case params['VK_LANG']
           when "LAT"
             return "lv"
