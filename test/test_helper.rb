@@ -45,6 +45,12 @@ SacPS::Auth::Dnb.identifier = 'ACC1'
 SacPS::Auth::Dnb.service_url = 'https://ib.dnb.lv/login/index.php'
 SacPS::Auth::Dnb.return_url = 'http://www.myplace.com'
 
+SacPS::Auth::Nordea.identifier = '87441733816'
+SacPS::Auth::Nordea.service_url = 'https://ib.dnb.lv/login/index.php'
+SacPS::Auth::Nordea.return_url = 'http://www.myplace.com'
+SacPS::Auth::Nordea.cancel_url = 'http://www.myplace.com'
+SacPS::Auth::Nordea.fail_url = 'http://www.myplace.com'
+SacPS::Auth::Nordea.mac = 'ttetpptr0xyie3n20cd1gr725n7gp8ox'
 
 #BEGIN CERTS
 SacPS::Auth::Swedbank.private_key = <<EOF
@@ -234,4 +240,3 @@ ZIwxElbF0+5qQ9ZxZV8TgeeyaDHqdIAePKhl8DJdfxloPIizaCL6zckrteIINCfhvleKxpSMumbE
 A1Nl8iRhloI=
 -----END CERTIFICATE-----
 EOF
-
