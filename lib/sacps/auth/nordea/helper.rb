@@ -74,13 +74,6 @@ module SacPS
             result << "#{SacPS::Auth::Nordea.mac}&"
             return result
           end
-
-          def generate_mac fields
-            data = OpenSSL::Digest::MD5.hexdigest(fields).upcase
-            puts data
-            data
-          end
-
       end
     end
   end
