@@ -15,8 +15,8 @@ module SacPS
 
         def user_information
           data = params['IB_USER_INFO'].split(";")
-          identifier = data.first.split(":").last
-          name = data.last.split(":").last
+          identifier = data.first.split("=").last
+          name = data.last.split("=").last
           return "#{identifier};#{name}"
         end
 
