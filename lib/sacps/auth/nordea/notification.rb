@@ -15,10 +15,12 @@ module SacPS
 
         def user_information
           identifier = params['B02K_CUSTID']
-
           identifier = identifier.split(//).first(6).join+"-"+identifier.split(//).last(5).join
 
-          "#{identifier};#{params['B02K_CUSTNAME']}"
+          full_name = params['B02K_CUSTNAME']
+          full_name = full_name.split(" ").reverse.join(" ")
+
+          "#{identifier};#{full_name}"
         end
 
         def user_identifier
