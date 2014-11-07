@@ -18,7 +18,7 @@ module SacPS
           identifier = identifier.split(//).first(6).join+"-"+identifier.split(//).last(5).join
 
           full_name = params['B02K_CUSTNAME']
-          full_name = full_name.split(" ").reverse.join(" ")
+          full_name = full_name.split(" ").reverse.join(" ").upcase
 
           "#{identifier};#{full_name}"
         end
