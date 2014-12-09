@@ -1,12 +1,13 @@
-# # encoding: utf-8
+# rspec spec/auth/helpers/sacps_auth_seb_helper_spec.rb
 
-# require File.dirname(__FILE__) + '/test_helper'
+require 'spec_helper'
 
-# class SacPSAuthSebHelperTest < Minitest::Test
-#   def test_should_create_fields
-    
-#     helper = SacPS::Auth::Seb.helper
-#     assert_equal 3, helper.form_fields.size
-#   end
+describe SacPS::Auth::Seb::Helper do
+  before :all do
+    @helper = SacPS::Auth::Seb.helper
+  end
 
-# end
+  it "should create correct amount of fields" do
+    expect(@helper.form_fields.size).to eq 3
+  end
+end

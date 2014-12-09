@@ -1,12 +1,13 @@
-# # encoding: utf-8
+# rspec spec/auth/helpers/sacps_auth_nordea_helper_spec.rb
 
-# require File.dirname(__FILE__) + '/test_helper'
+require 'spec_helper'
 
-# class SacPSAuthNordeaHelperTest < Minitest::Test
-#   def test_should_create_fields
-    
-#     helper = SacPS::Auth::Nordea.helper
-#     assert_equal 12, helper.form_fields.size
-#   end
+describe SacPS::Auth::Nordea::Helper do
+  before :all do
+    @helper = SacPS::Auth::Nordea.helper
+  end
 
-# end
+  it "should create correct amount of fields" do
+    expect(@helper.form_fields.size).to eq 12
+  end
+end
