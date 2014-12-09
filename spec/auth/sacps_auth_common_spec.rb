@@ -1,4 +1,4 @@
-# rspec spec/tests/sacps_auth_common_spec.rb
+# rspec spec/auth/sacps_auth_common_spec.rb
 
 require 'spec_helper'
 
