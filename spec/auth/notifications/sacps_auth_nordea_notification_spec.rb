@@ -1,27 +1,22 @@
-# # encoding: utf-8
+# rspec spec/auth/notifications/sacps_auth_nordea_notification_spec.rb
 
-# require File.dirname(__FILE__) + '/test_helper'
+require 'spec_helper'
 
-# class SacPSAuthNordeaNotificationtest < Minitest::Test
-#   def setup
-#     @nordea_auth = SacPS::Auth::Nordea.notification(http_raw_data)
-#   end
+describe SacPS::Auth::Nordea::Notification do
+  before :all do
+    VALID_HTTP_RAW_DATA = "B02K_VERS=0002&B02K_TIMESTMP=2002014110314171455&B02K_IDNBR=618644&B02K_STAMP=20141103141713056838&B02K_CUSTNAME=Doe+John&B02K_KEYVERS=0001&B02K_ALG=01&B02K_CUSTID=05050512123&B02K_CUSTTYPE=01&B02K_MAC=F788CDFAB29BEDA3D9AE3EAA73E06258"
+    @valid_notification = SacPS::Auth::Nordea.notification VALID_HTTP_RAW_DATA
+  end
 
-#   def test_user_information
-#     assert_equal "050505-12123;JOHN DOE", @nordea_auth.user_information
-#   end
+  it "should return correct user user_information" do
+    expect(@valid_notification.user_information).to eq "050505-12123;JOHN DOE"
+  end
 
-#   def test_user_name
-#     assert_equal "JOHN DOE", @nordea_auth.user_name
-#   end
+  it "should return correct user name" do
+    expect(@valid_notification.user_name).to eq "JOHN DOE"
+  end
 
-#   def test_user_identifier
-#     assert_equal "050505-12123", @nordea_auth.user_identifier
-#   end
-
-#   private
-#     def http_raw_data
-#       "B02K_VERS=0002&B02K_TIMESTMP=2002014110314171455&B02K_IDNBR=618644&B02K_STAMP=20141103141713056838&B02K_CUSTNAME=Doe+John&B02K_KEYVERS=0001&B02K_ALG=01&B02K_CUSTID=05050512123&B02K_CUSTTYPE=01&B02K_MAC=F788CDFAB29BEDA3D9AE3EAA73E06258"
-#     end
-
-# end
+  it "should return correct user identifier" do
+    expect(@valid_notification.user_identifier).to eq "050505-12123"
+  end
+end
