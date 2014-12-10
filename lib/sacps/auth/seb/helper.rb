@@ -20,7 +20,7 @@ module SacPS
         end
 
         def add_required_params
-          required_params = SacPS::Auth::Seb.required_service_params
+          required_params = SacPS::Auth::Seb.required_service_params[ib_service]
           required_params.each do |param|
             param_value = (@options.delete(param) || send(param.to_s.downcase)).to_s
             add_field param, encode_to_utf8(param_value)

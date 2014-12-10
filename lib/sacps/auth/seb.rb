@@ -17,11 +17,13 @@ module SacPS
         Helper.new options
       end
 
-      self.required_service_params = [
-        'IB_SND_ID',
-        'IB_SERVICE',
-        'IB_LANG'
-      ]
+      self.required_service_params = {
+        '0005' => [
+          'IB_SND_ID',
+          'IB_SERVICE',
+          'IB_LANG',
+        ],
+      }
 
     end
   end
