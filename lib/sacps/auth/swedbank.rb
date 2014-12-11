@@ -38,7 +38,15 @@ module SacPS
           'VK_REC_ID',
           'VK_NONCE',
           'VK_RETURN'
-          ]
+          ],
+        3003 => [
+          'VK_SERVICE',
+          'VK_VERSION',
+          'VK_SND_ID',
+          'VK_REC_ID',
+          'VK_NONCE',
+          'VK_INFO'
+        ]
       }
     end
   end
