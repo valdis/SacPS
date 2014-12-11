@@ -37,7 +37,20 @@ module SacPS
           'VK_SND_ID',
           'VK_STAMP',
           'VK_RETURN',
-          ]
+          ],
+        2001 => [
+          'VK_SERVICE',
+          'VK_VERSION',
+          'VK_SND_ID',
+          'VK_REC_ID',
+          'VK_STAMP',
+          'VK_T_NO',
+          'VK_PER_CODE',
+          'VK_PER_FNAME',
+          'VK_PER_LNAME',
+          'VK_TIME',
+          'VK_LANG'
+        ]
       }
 
     end
