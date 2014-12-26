@@ -41,6 +41,10 @@ module SacPS
           end
         end
 
+        def valid?
+          true
+        end
+
         private
           def emptify!
             @params  = Hash.new
