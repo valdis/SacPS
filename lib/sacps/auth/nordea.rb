@@ -12,6 +12,7 @@ module SacPS
       mattr_accessor :fail_url
 
       mattr_accessor :required_service_params
+      mattr_accessor :required_response_params_for_mac_calc
 
       def self.notification post
         Notification.new post
@@ -39,6 +40,17 @@ module SacPS
         'A01Y_ALG'
       ]
 
+      self.required_response_params_for_mac_calc = [
+        'B02K_VERS',
+        'B02K_TIMESTMP',
+        'B02K_IDNBR',
+        'B02K_STAMP',
+        'B02K_CUSTNAME',
+        'B02K_KEYVERS',
+        'B02K_ALG',
+        'B02K_CUSTID',
+        'B02K_CUSTTYPE'
+      ]
     end
   end
 end
