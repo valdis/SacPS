@@ -12,11 +12,11 @@ module SacPS
           @xml = build_request_xml
         end
 
-        # def sign(unsigned_string)
-        #   rsa         = OpenSSL::PKey::RSA.new(File.read(CPS.config.rsa_cert_path), CPS.config.cert_pass )
-        #   signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, unsigned_string)
-        #   Base64.encode64(signed_hash)
-        # end
+        def sign(unsigned_string)
+          rsa         = OpenSSL::PKey::RSA.new(File.read(SacPS::Auth::Citadele.private_key), '' )
+          signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, unsigned_string)
+          Base64.encode64(signed_hash) # TO-DO: Figure out if this is needed
+        end
 
         def build_request_xml
           timestamp = Time.now.strftime("%Y%m%d%H%M%S%3N") # "20030905175959000"

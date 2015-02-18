@@ -9,13 +9,13 @@ module SacPS
 
       SacPS::Auth::Citadele.service_url = "https://online.citadele.lv/amai/start.htm"
 
-      # def self.notification post
-      #   Notification.new post
-      # end
+      def self.notification post
+        Notification.new post
+      end
 
-      # def self.helper options={}
-      #   Helper.new options
-      # end
+      def self.helper options={}
+        Helper.new options
+      end
 
     end
   end

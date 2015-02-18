@@ -18,3 +18,11 @@ require 'sacps/sacps'
 require 'sacps/base'
 require 'sacps/auth'
 require 'sacps/pay'
+
+module SacPS
+  ROOT = File.expand_path("../..", __FILE__)
+
+  def self.root
+    ROOT
+  end
+end

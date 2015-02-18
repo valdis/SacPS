@@ -1,14 +1,18 @@
 ### Citadele usage
 
 #### Configure defaults
-SacPS::Auth::Citadele.return_url = "https://manabal"
-SacPS::Auth::Citadele.identifier = "10025" # Your merchant number with Citadele
+```ruby
+SacPS::Auth::Citadele.return_url = "https://your-domain.com/auth/citadele"
+SacPS::Auth::Citadele.identifier = "13091" # Your merchant number with Citadele
 SacPS::Auth::Citadele.service_url = "https://online.citadele.lv/amai/start.htm" # set by default
-SacPS::Auth::Citadele.public_key = File.read("#{Rails.root}/secret/citadele/citadele.crt")
-SacPS::Auth::Citadele.private_key = File.read("#{Rails.root}/secret/citadele/citadele.key")
+SacPS::Auth::Citadele.public_key = File.read("#{Rails.root}/certs/citadele.crt")
+SacPS::Auth::Citadele.private_key = File.read("#{Rails.root}/certs/citadele.key")
+```
 
 #### Initialize the helper
+```ruby
 @request_helper = SacPS::Auth::Citadele::Helper.new
+```
 
 #### Build an automatic submit form
 Use SacPS::Auth::Citadele.service_url and @request_helper.xml
@@ -28,3 +32,16 @@ Use SacPS::Auth::Citadele.service_url and @request_helper.xml
 ```
 
 #### Expect a response at the return_url you specified
+##### Instantiate a notification object
+```ruby
+@response = SacPS::Auth::Citadele::Notification.new(params[:xmlResponse])
+```
+
+##### Check if response is valid and process
+```ruby
+if @response.ok?
+  @response.user_identifier #=> "123456-12345"
+  @response.user_name       #=> "BĒRZIŅŠ JĀNIS" (< Citadele default)
+  @response.from            #=> "CITADELE"
+```
+
