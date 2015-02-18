@@ -1,0 +1,30 @@
+### Citadele usage
+
+#### Configure defaults
+SacPS::Auth::Citadele.return_url = "https://manabal"
+SacPS::Auth::Citadele.identifier = "10025" # Your merchant number with Citadele
+SacPS::Auth::Citadele.service_url = "https://online.citadele.lv/amai/start.htm" # set by default
+SacPS::Auth::Citadele.public_key = File.read("#{Rails.root}/secret/citadele/citadele.crt")
+SacPS::Auth::Citadele.private_key = File.read("#{Rails.root}/secret/citadele/citadele.key")
+
+#### Initialize the helper
+@request_helper = SacPS::Auth::Citadele::Helper.new
+
+#### Build an automatic submit form
+Use SacPS::Auth::Citadele.service_url and @request_helper.xml
+
+```
+# views/auth/citadele/new.html.erb
+<html>
+  <head>
+  </head>
+  <body onload="document.citadeleForm.submit();" style="display:none;">
+  <form method="POST" name="citadeleForm" action="<%= SacPS::Auth::Citadele.service_url %>">
+    <input type="hidden" id="xmldata" name="xmldata" value="<%= @request_helper.xml %>">
+    <input type="submit" value="Send">
+  </form>
+  </body>
+</html>
+```
+
+#### Expect a response at the return_url you specified
