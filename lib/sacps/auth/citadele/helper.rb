@@ -6,14 +6,18 @@ module SacPS
         include SacPS::Auth::Common
         include SacPS::Auth::Citadele
 
+        attr_accessor :identifier, :return_url, :xml, :form_fields
+
         def initialize
-          @account = SacPS::Auth::Citadele.account
+          @identifier = SacPS::Auth::Citadele.identifier
           @return_url = SacPS::Auth::Citadele.return_url
           @xml = build_request_xml
+
+          @form_fields = { "xmldata" => @xml }
         end
 
         def sign(unsigned_string)
-          rsa         = OpenSSL::PKey::RSA.new(File.read(SacPS::Auth::Citadele.private_key), '' )
+          rsa         = OpenSSL::PKey::RSA.new(SacPS::Auth::Citadele.private_key)
           signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, unsigned_string)
           Base64.encode64(signed_hash) # TO-DO: Figure out if this is needed
         end
@@ -24,7 +28,7 @@ module SacPS
           request = "AUTHREQ"
           version = "3.0"
           language = "LV"
-          signature = sign( [timestamp, @account, request, unique_id, version, language, @return_url].join )
+          signature = sign( [timestamp, @identifier, request, unique_id, version, language, @return_url].join )
 
           xml = <<-XML
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -34,7 +38,7 @@ xsi:schemaLocation="http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1
 http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1/fidavista.xsd">
   <Header>
     <Timestamp>#{timestamp}</Timestamp>
-    <From>#{@account}</From>
+    <From>#{@identifier}</From>
     <Extension>
       <Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,9 +50,7 @@ http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1/fidavista.xsd">
         <Language>#{language}</Language>
         <ReturnURL>#{@return_url}</ReturnURL>
         <SignatureData>
-          <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-            #{signature}
-          </Signature>
+          <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">\n#{signature}</Signature>
         </SignatureData>
       </Amai>
     </Extension>

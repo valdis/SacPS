@@ -17,6 +17,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     builder (3.2.2)
+    colorize (0.7.5)
     diff-lcs (1.2.5)
     i18n (0.6.11)
     json (1.8.1)
@@ -24,6 +25,9 @@ GEM
     minitest (5.4.2)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
+    priscilla (1.0.3)
+      colorize (~> 0.7)
+      rumoji (~> 0.3)
     rake (10.1.1)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
@@ -37,6 +41,7 @@ GEM
     rspec-mocks (3.1.1)
       rspec-support (~> 3.1.0)
     rspec-support (3.1.0)
+    rumoji (0.4.0)
     thread_safe (0.3.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -47,6 +52,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  priscilla
   rake
   rspec
   sacps!

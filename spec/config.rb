@@ -6,9 +6,9 @@ SacPS::Auth::Seb.identifier = 'ACC1'
 SacPS::Auth::Seb.service_url = 'https://ibanka.seb.lv/ipc/epakindex.jsp'
 #NO RETURN URL
 
-SacPS::Auth::Citadele.identifier = 'ACC1'
+SacPS::Auth::Citadele.identifier = 'CitadeleACC1'
 SacPS::Auth::Citadele.service_url = 'https://online.citadele.lv/amai/start.htm'
-SacPS::Auth::Citadele.return_url = 'http://www.myplace.com'
+SacPS::Auth::Citadele.return_url = 'http://www.mycitadele.com'
 
 SacPS::Auth::Dnb.identifier = 'ACC1'
 SacPS::Auth::Dnb.service_url = 'https://ib.dnb.lv/login/index.php'
