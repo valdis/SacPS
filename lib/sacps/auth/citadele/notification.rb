@@ -2,7 +2,6 @@ module SacPS
   module Auth
     module Citadele
       class Notification
-        require 'Nokogiri'
 
         attr_reader :xml, :message, :user_identifier, :user_name, :from
         attr_accessor :response_hash, :code
@@ -37,12 +36,22 @@ module SacPS
           return @code == "100"
         end
 
-        def signature_ok?
-          digi_signature = response_hash["SignatureData"]
-          hash_string = build_hashable_string
-          decoded_resp = Base64.decode64(digi_signature)
-          SacPS::Auth::Citadele.get_public_key.verify(OpenSSL::Digest::SHA1.new, decoded_resp, hash_string)
+        # def signature_ok?
+        #   digi_signature = response_hash["SignatureData"]
+        #   hash_string = build_hashable_string
+        #   decoded_resp = Base64.decode64(digi_signature)
+        #   SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_resp, hash_string)
+        # end
+
+        def signature?
+          # doc = Nokogiri::XML(xml) { |config| config.strict }
+          #signed_document = Xmldsig::SignedDocument.new(xml)
+          # ERROR HERE ˇ
+          #signed_document.validate(SacPS::Auth::Citadele.get_public_key)
         end
+
+        # TO-DO: Verify timestamp being withing 15 minutes (900s)
+        # TO-DO: Verify that response with UID has not already been processed
 
         private
 

@@ -199,3 +199,56 @@ ZIwxElbF0+5qQ9ZxZV8TgeeyaDHqdIAePKhl8DJdfxloPIizaCL6zckrteIINCfhvleKxpSMumbE
 A1Nl8iRhloI=
 -----END CERTIFICATE-----
 EOF
+
+TEST_CITADELE_RESPONSE = <<-EOF
+<?xml version="1.0" encoding="UTF-8" ?>
+<FIDAVISTA xmlns="http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1 http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1/fidavista.xsd">
+  <Header>
+    <Timestamp>20151101175959000</Timestamp>
+    <From>10001</From>
+    <Extension>
+      <Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/ http://online.citadele.lv/XMLSchemas/amai/amai.xsd">
+        <Request>AUTHRESP</Request>
+        <RequestUID>7387bf5b-fa27-4fdd-add6-a6bfb2599f77</RequestUID>
+        <Version>3.0</Version>
+        <Language>LV</Language>
+        <PersonCode>01010112345</PersonCode>
+        <Person>BĒRZIŅŠ JĀNIS</Person>
+        <Code>100</Code>
+        <Message>placeholder</Message>
+        <SignatureData>
+          <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+r2tul4LmC/m7TrsF4KVbs9RNo4j9IVBSz57NRIN7HlSne+2yodnpffizQVEX
+rh/W/nZTR0yLhrXXlEVZBB1ghEFIu5V4rSs3Q8Odycylci20WCmPLyxWa3oY
+/z3oSaR1fDI4I89v63isToZrhoCXJed4L5PRTMkLhgWyJ19gHTdCFDBVoARA
++iG9nsAnhAdUXg7Nxe+it7r9KNJG6YqExFN+4akJTBf/OqthJkDctQCwy5yf
+KoU0Zo79wp2rLQwkWAkbReAhGoEFi53QukFfdWANw+7aWQOdHPYC9BCg/Tor
+          </Signature>
+        </SignatureData>
+      </Amai>
+    </Extension>
+  </Header>
+</FIDAVISTA>
+EOF
+
+XML = <<-XML
+<?xml version="1.0" encoding="UTF-8" ?>
+<FIDAVISTA>
+  <Header>
+    <Timestamp>1234</Timestamp>
+    <From>10000</From>
+    <Extension>
+      <Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/
+        http://online.citadele.lv/XMLSchemas/amai/amai.xsd">
+        <Request>123123</Request>
+        <RequestUID>123123</RequestUID>
+        <Version>3</Version>
+        <Language>LV</Language>
+        <ReturnURL>www.mb.lv</ReturnURL>
+      </Amai>
+    </Extension>
+  </Header>
+</FIDAVISTA>
+XML
