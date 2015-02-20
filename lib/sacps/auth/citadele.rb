@@ -5,6 +5,8 @@ module SacPS
   module Auth
     module Citadele
 
+      require 'xmldsig'
+
       mattr_accessor :service_url, :return_url, :identifier, :public_key, :private_key
 
       SacPS::Auth::Citadele.service_url = "https://online.citadele.lv/amai/start.htm"
@@ -21,6 +23,10 @@ module SacPS
 
       def self.get_public_key
         OpenSSL::X509::Certificate.new(SacPS::Auth::Citadele.public_key).public_key
+      end
+
+      def self.get_private_key
+        OpenSSL::PKey::RSA.new(SacPS::Auth::Citadele.private_key)
       end
 
     end

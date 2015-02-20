@@ -59,7 +59,29 @@ KoU0Zo79wp2rLQwkWAkbReAhGoEFi53QukFfdWANw+7aWQOdHPYC9BCg/Tor
     expect(@valid_notification.from).to eq "CITADELE"
   end
 
-  it "should return correct verification status" do
+  # it "should TRUE timestamp if within 15 minutes" do
+  #   now = Time.now.strftime("%Y%m%d%H%M%S%3N")
+  #   pr @valid_notification.response_hash["Timestamp"]
+  #   @valid_notification.response_hash["Timestamp"] = now
+  #   pr @valid_notification.response_hash["Timestamp"]
+  #   expect(@valid_notification.timestamp_ok?).to eq 1
+  # end
+
+  # it "should FALSE timestamp if outside 15 minutes" do
+  #   expect(@valid_notification.timestamp_ok?).to eq "CITADELE"
+  # end
+
+  it "should TRUE if code is 100" do
+    expect(@valid_notification.code_ok?).to eq true
+  end
+
+  it "should FALSE if code is not 100" do
+    @valid_notification.code = "200"
+    expect(@valid_notification.code_ok?).to eq false
+  end
+
+  xit "should return correct verification status" do
+    expect(@valid_notification.code_ok?).to eq true
     expect(@valid_notification.ok?).to eq true # set to true if passes
   end
 

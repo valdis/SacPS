@@ -11,55 +11,77 @@ module SacPS
         def initialize
           @identifier = SacPS::Auth::Citadele.identifier
           @return_url = SacPS::Auth::Citadele.return_url
-          @xml = build_request_xml
+          @xml = return_signed_request_xml
 
           @form_fields = { "xmldata" => @xml }
         end
 
-        def sign(unsigned_string)
-          rsa         = OpenSSL::PKey::RSA.new(SacPS::Auth::Citadele.private_key)
-          signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, unsigned_string)
-          Base64.encode64(signed_hash) # TO-DO: Figure out if this is needed
+        # def sign(unsigned_string)
+        #   rsa         = OpenSSL::PKey::RSA.new(SacPS::Auth::Citadele.private_key)
+        #   signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, unsigned_string)
+        #   Base64.encode64(signed_hash) # TO-DO: Figure out if this is needed
+        # end
+
+        def return_signed_request_xml
+          # return build_unsigned_request_xml # TESTING ONLY
+          unsigned_document = Xmldsig::SignedDocument.new(build_unsigned_request_xml)
+          return unsigned_document.sign(SacPS::Auth::Citadele.get_private_key).gsub('"', "&quot;")
         end
 
-        def build_request_xml
-          timestamp = Time.now.strftime("%Y%m%d%H%M%S%3N") # "20030905175959000"
-          unique_id = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
-          request = "AUTHREQ"
-          version = "3.0"
-          language = "LV"
-          signature = sign( [timestamp, @identifier, request, unique_id, version, language, @return_url].join )
+        private
 
-          xml = <<-XML
+          def build_unsigned_request_xml
+            timestamp = Time.now.strftime("%Y%m%d%H%M%S%3N") # "20030905175959000"
+            unique_id = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
+            request = "AUTHREQ"
+            version = "3.0"
+            language = "LV"
+            ivis_url = "http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1"
+            #signature = sign( [timestamp, @identifier, request, unique_id, version, language, @return_url].join )
+
+            xml = <<-XML
 <?xml version="1.0" encoding="UTF-8" ?>
-<FIDAVISTA xmlns="http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1
-http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1/fidavista.xsd">
+<FIDAVISTA xmlns="#{ivis_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="#{ivis_url} #{ivis_url}/fidavista.xsd">
   <Header>
     <Timestamp>#{timestamp}</Timestamp>
     <From>#{@identifier}</From>
     <Extension>
       <Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/
-      http://online.citadele.lv/XMLSchemas/amai/amai.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/
+        http://online.citadele.lv/XMLSchemas/amai/amai.xsd">
         <Request>#{request}</Request>
         <RequestUID>#{unique_id}</RequestUID>
         <Version>#{version}</Version>
         <Language>#{language}</Language>
         <ReturnURL>#{@return_url}</ReturnURL>
         <SignatureData>
-          <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">\n#{signature}</Signature>
+          <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+              <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+              <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsasha1"/>
+              <Reference URI="">
+                <Transforms>
+                  <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                <DigestValue></DigestValue>
+              </Reference>
+            </SignedInfo>
+            <SignatureValue></SignatureValue>
+          </Signature>
         </SignatureData>
       </Amai>
     </Extension>
   </Header>
 </FIDAVISTA>
-          XML
-
-          return xml.chomp
-        end
+XML
+            clean_xml = xml.strip.chomp
+            # Raise an error on malformedness
+            doc = Nokogiri::XML(clean_xml) { |config| config.strict }
+            return clean_xml
+          end
 
       end # -- Class Helper ends
     end

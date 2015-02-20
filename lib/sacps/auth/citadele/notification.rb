@@ -4,11 +4,11 @@ module SacPS
       class Notification
         require 'Nokogiri'
 
-        attr_reader :xml, :response_hash, :code, :message,
-          :user_identifier, :user_name, :from
+        attr_reader :xml, :message, :user_identifier, :user_name, :from
+        attr_accessor :response_hash, :code
 
         def initialize(xml)
-          @xml = xml
+          @xml = xml.gsub("&quot;", '"')
           @response_hash = parse_response(@xml)
           @code = @response_hash["Code"]
           @message = @response_hash["Message"]
@@ -23,7 +23,18 @@ module SacPS
         end
 
         def ok?
-          return signature_ok? # && TO-DO: Check timestamp age
+          return signature_ok? && code_ok?
+        end
+
+        # def timestamp_ok?
+        #   # To_i
+        #   integer_now = Time.now.to_i
+        #   integer_at_stamp = response_hash["Timestamp"].to_datetime.to_i
+        #   return
+        # end
+
+        def code_ok?
+          return @code == "100"
         end
 
         def signature_ok?
@@ -35,31 +46,31 @@ module SacPS
 
         private
 
-        def parse_response xml
-          @response = Nokogiri::XML(xml) do |config|
-            config.strict.nonet
+          def parse_response xml
+            @response = Nokogiri::XML(xml) do |config|
+              config.strict.nonet
+            end
+            @response.remove_namespaces!
+
+            return {
+              "Timestamp" => @response.xpath("//Timestamp").text,
+              "From" => @response.xpath("//From").text,
+              "Request" => @response.xpath("//Request").text,
+              "RequestUID" => @response.xpath("//RequestUID").text,
+              "Version" => @response.xpath("//Version").text,
+              "Language" => @response.xpath("//Language").text,
+              "PersonCode" => @response.xpath("//PersonCode").text,
+              "Person" => @response.xpath("//Person").text,
+              "Code" => @response.xpath("//Code").text, # Important
+              "Message" => @response.xpath("//Message").text,
+              "SignatureData" => @response.xpath("//SignatureData").text.strip
+              }
           end
-          @response.remove_namespaces!
 
-          return {
-            "Timestamp" => @response.xpath("//Timestamp").text,
-            "From" => @response.xpath("//From").text,
-            "Request" => @response.xpath("//Request").text,
-            "RequestUID" => @response.xpath("//RequestUID").text,
-            "Version" => @response.xpath("//Version").text,
-            "Language" => @response.xpath("//Language").text,
-            "PersonCode" => @response.xpath("//PersonCode").text,
-            "Person" => @response.xpath("//Person").text,
-            "Code" => @response.xpath("//Code").text, # Important
-            "Message" => @response.xpath("//Message").text,
-            "SignatureData" => @response.xpath("//SignatureData").text.strip
-            }
-        end
-
-        def build_hashable_string
-          rh = @response_hash
-          return "#{rh["Timestamp"]}#{rh["From"]}#{rh["Request"]}#{rh["RequestUID"]}#{rh["Version"]}#{rh["Language"]}#{rh["PersonCode"]}#{rh["Person"]}#{rh["Code"]}#{rh["Message"]}"
-        end
+          def build_hashable_string
+            rh = @response_hash
+            return "#{rh["Timestamp"]}#{rh["From"]}#{rh["Request"]}#{rh["RequestUID"]}#{rh["Version"]}#{rh["Language"]}#{rh["PersonCode"]}#{rh["Person"]}#{rh["Code"]}#{rh["Message"]}"
+          end
 
       end # -- Ends class
     end
