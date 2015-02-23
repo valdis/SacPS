@@ -3,7 +3,7 @@ module SacPS
     module Citadele
       class Notification
 
-        attr_reader :xml, :message, :user_identifier, :user_name, :from
+        attr_reader :xml, :message, :user_identifier, :user_name, :from, :uuid
         attr_accessor :response_hash, :code
 
         def initialize(xml)

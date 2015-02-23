@@ -6,7 +6,7 @@ module SacPS
         include SacPS::Auth::Common
         include SacPS::Auth::Citadele
 
-        attr_accessor :identifier, :return_url, :xml, :form_fields
+        attr_accessor :identifier, :return_url, :xml, :form_fields, :uuid
 
         def initialize
           @identifier = SacPS::Auth::Citadele.identifier
