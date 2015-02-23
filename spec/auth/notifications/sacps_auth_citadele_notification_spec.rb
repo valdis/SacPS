@@ -5,6 +5,9 @@ require 'spec_helper'
 describe SacPS::Auth::Seb::Notification do
   let(:valid_notification) { SacPS::Auth::Citadele.notification TEST_CITADELE_RESPONSE.strip }
 
+  SacPS::Auth::Citadele.return_url = "http://lvh.me:3000/auth/citadele"
+  SacPS::Auth::Citadele.identifier = "13091" # Your merchant number with Citadele
+
   it "should return correct user user_information" do
     expect(valid_notification.user_information).to eq "010101-12345;JĀNIS BĒRZIŅŠ"
   end
@@ -22,6 +25,7 @@ describe SacPS::Auth::Seb::Notification do
   end
 
   it "should check the signature" do
+    puts ENV['DDD']
     expect(valid_notification.signature?).to eq 1
   end
 

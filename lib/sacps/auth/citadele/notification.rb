@@ -11,6 +11,7 @@ module SacPS
           @response_hash = parse_response(@xml)
           @code = @response_hash["Code"]
           @message = @response_hash["Message"]
+          @uuid = @response_hash["RequestUID"]
 
           @user_identifier = @response_hash["PersonCode"].split("").insert(6,"-").join #=> "123456-12345"
           @user_name       = @response_hash["Person"].split(" ").rotate.join(" ") #=> "JĀNIS BĒRZIŅŠ"
@@ -22,15 +23,8 @@ module SacPS
         end
 
         def ok?
-          return signature_ok? && code_ok?
+          return code_ok? && signature_ok?# && timestamp_ok? && uuid_ok?
         end
-
-        # def timestamp_ok?
-        #   # To_i
-        #   integer_now = Time.now.to_i
-        #   integer_at_stamp = response_hash["Timestamp"].to_datetime.to_i
-        #   return
-        # end
 
         def code_ok?
           return @code == "100"
@@ -43,14 +37,21 @@ module SacPS
         #   SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_resp, hash_string)
         # end
 
-        def signature?
-          # doc = Nokogiri::XML(xml) { |config| config.strict }
-          #signed_document = Xmldsig::SignedDocument.new(xml)
-          # ERROR HERE ˇ
-          #signed_document.validate(SacPS::Auth::Citadele.get_public_key)
+        def signature_ok?
+          doc = Nokogiri::XML(xml) { |config| config.strict }
+          signed_document = Xmldsig::SignedDocument.new(xml)
+          # ERROR HERE d
+          signed_document.validate(SacPS::Auth::Citadele.get_public_key)
         end
 
         # TO-DO: Verify timestamp being withing 15 minutes (900s)
+        # def timestamp_ok?
+        #   # To_i
+        #   integer_now = Time.now.to_i
+        #   integer_at_stamp = response_hash["Timestamp"].to_datetime.to_i
+        #   return
+        # end
+
         # TO-DO: Verify that response with UID has not already been processed
 
         private

@@ -19,6 +19,7 @@ GEM
     builder (3.2.2)
     colorize (0.7.5)
     diff-lcs (1.2.5)
+    dotenv (1.0.2)
     i18n (0.6.11)
     json (1.8.1)
     mini_portile (0.6.0)
@@ -52,6 +53,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dotenv
   priscilla
   rake
   rspec

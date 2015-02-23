@@ -12,6 +12,7 @@ module SacPS
           @identifier = SacPS::Auth::Citadele.identifier
           @return_url = SacPS::Auth::Citadele.return_url
           @xml = return_signed_request_xml
+          @uuid = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
 
           @form_fields = { "xmldata" => @xml }
         end
@@ -32,27 +33,23 @@ module SacPS
 
           def build_unsigned_request_xml
             timestamp = Time.now.strftime("%Y%m%d%H%M%S%3N") # "20030905175959000"
-            unique_id = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
             request = "AUTHREQ"
             version = "3.0"
             language = "LV"
             ivis_url = "http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1"
+            amai_url = "http://online.citadele.lv/XMLSchemas/amai/"
             #signature = sign( [timestamp, @identifier, request, unique_id, version, language, @return_url].join )
 
             xml = <<-XML
 <?xml version="1.0" encoding="UTF-8" ?>
-<FIDAVISTA xmlns="#{ivis_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="#{ivis_url} #{ivis_url}/fidavista.xsd">
+<FIDAVISTA xmlns="#{ivis_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="#{ivis_url} #{ivis_url}/fidavista.xsd">
   <Header>
     <Timestamp>#{timestamp}</Timestamp>
     <From>#{@identifier}</From>
     <Extension>
-      <Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/
-        http://online.citadele.lv/XMLSchemas/amai/amai.xsd">
+      <Amai xmlns="#{amai_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="#{amai_url} #{amai_url}amai.xsd">
         <Request>#{request}</Request>
-        <RequestUID>#{unique_id}</RequestUID>
+        <RequestUID>#{@uuid}</RequestUID>
         <Version>#{version}</Version>
         <Language>#{language}</Language>
         <ReturnURL>#{@return_url}</ReturnURL>
@@ -80,7 +77,9 @@ XML
             clean_xml = xml.strip.chomp
             # Raise an error on malformedness
             doc = Nokogiri::XML(clean_xml) { |config| config.strict }
-            return clean_xml
+            #puts ">>>>>>> CANON <<<<<<<"
+            #puts doc.canonicalize
+            return doc.canonicalize # clean_xml
           end
 
       end # -- Class Helper ends
