@@ -58,7 +58,7 @@ module SacPS
             <SignedInfo>
               <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
               <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsasha1"/>
-              <Reference URI="">
+              <Reference>
                 <Transforms>
                   <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
                 </Transforms>
@@ -67,6 +67,12 @@ module SacPS
               </Reference>
             </SignedInfo>
             <SignatureValue></SignatureValue>
+            <KeyInfo>
+              <X509Data>
+                <X509SubjectName></X509SubjectName>
+                <X509Certificate>#{SacPS::Auth::Citadele.public_key.split("\n")[1..-2].join("\n")}</X509Certificate>
+              </X509Data>
+            </KeyInfo>
           </Signature>
         </SignatureData>
       </Amai>
