@@ -6,13 +6,14 @@ module SacPS
         include SacPS::Auth::Common
         include SacPS::Auth::Citadele
 
-        attr_accessor :identifier, :return_url, :xml, :form_fields, :uuid
+        attr_accessor :identifier, :return_url, :xml, :form_fields, :unique_identifier
 
         def initialize
+          raise "Citadele cert init failed! See readme." if ENV["CITADELE_IDENTIFIER"].blank? || SacPS::Auth::Citadele.private_key.blank?
           @identifier = SacPS::Auth::Citadele.identifier
           @return_url = SacPS::Auth::Citadele.return_url
+          @unique_identifier = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
           @xml = return_signed_request_xml
-          @uuid = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
 
           @form_fields = { "xmldata" => @xml }
         end
@@ -26,7 +27,7 @@ module SacPS
         def return_signed_request_xml
           # return build_unsigned_request_xml # TESTING ONLY
           unsigned_document = Xmldsig::SignedDocument.new(build_unsigned_request_xml)
-          return unsigned_document.sign(SacPS::Auth::Citadele.get_private_key).gsub('"', "&quot;")
+          return unsigned_document.sign(SacPS::Auth::Citadele.get_private_key)
         end
 
         private
@@ -49,7 +50,7 @@ module SacPS
     <Extension>
       <Amai xmlns="#{amai_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="#{amai_url} #{amai_url}amai.xsd">
         <Request>#{request}</Request>
-        <RequestUID>#{@uuid}</RequestUID>
+        <RequestUID>#{@unique_identifier}</RequestUID>
         <Version>#{version}</Version>
         <Language>#{language}</Language>
         <ReturnURL>#{@return_url}</ReturnURL>
@@ -57,7 +58,7 @@ module SacPS
           <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
             <SignedInfo>
               <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-              <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsasha1"/>
+              <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
               <Reference>
                 <Transforms>
                   <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
@@ -69,8 +70,7 @@ module SacPS
             <SignatureValue></SignatureValue>
             <KeyInfo>
               <X509Data>
-                <X509SubjectName></X509SubjectName>
-                <X509Certificate>#{SacPS::Auth::Citadele.public_key.split("\n")[1..-2].join("\n")}</X509Certificate>
+                <X509Certificate>#{ENV["CITADELE_PRIVATE_CERT"]}</X509Certificate>
               </X509Data>
             </KeyInfo>
           </Signature>

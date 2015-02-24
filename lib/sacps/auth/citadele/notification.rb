@@ -23,11 +23,22 @@ module SacPS
         end
 
         def ok?
-          return code_ok? && signature_ok?# && timestamp_ok? && uuid_ok?
+          return code_ok? && cert_ok? && signature_ok? # && timestamp_ok?
         end
 
         def code_ok?
           return @code == "100"
+        end
+
+        # TO-DO: Check if key on server matches the pubkey (cert) in response
+        def cert_ok?
+          # puts %Q|server pubkey contents are:\n|
+          # puts SacPS::Auth::Citadele.public_key.inspect
+
+          # puts %Q|response_hash["SignatureCert"] contents are:\n|
+          # puts response_hash["SignatureCert"].inspect
+
+          SacPS::Auth::Citadele.public_key.strip == response_hash["SignatureCert"].strip
         end
 
         # def signature_ok?
@@ -44,15 +55,13 @@ module SacPS
           signed_document.validate(SacPS::Auth::Citadele.get_public_key)
         end
 
-        # TO-DO: Verify timestamp being withing 15 minutes (900s)
+        # TO-DO: Verify timestamp being within 15 minutes (900s)
         # def timestamp_ok?
         #   # To_i
         #   integer_now = Time.now.to_i
         #   integer_at_stamp = response_hash["Timestamp"].to_datetime.to_i
         #   return
         # end
-
-        # TO-DO: Verify that response with UID has not already been processed
 
         private
 
@@ -73,7 +82,8 @@ module SacPS
               "Person" => @response.xpath("//Person").text,
               "Code" => @response.xpath("//Code").text, # Important
               "Message" => @response.xpath("//Message").text,
-              "SignatureData" => @response.xpath("//SignatureData").text.strip
+              "SignatureValue" => @response.xpath("//SignatureValue").text.strip,
+              "SignatureCert" => @response.xpath("//X509Certificate").text.strip
               }
           end
 
