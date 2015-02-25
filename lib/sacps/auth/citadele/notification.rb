@@ -7,6 +7,7 @@ module SacPS
         attr_accessor :response_hash, :code
 
         def initialize(xml)
+          SacPS::Auth::Citadele.validate_config
           @xml = xml.gsub("&quot;", '"')
           @response_hash = parse_response(@xml)
           @code = @response_hash["Code"]
