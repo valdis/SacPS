@@ -9,13 +9,15 @@ SacPS::Auth::Citadele.public_key = File.read("#{Rails.root}/certs/citadele.crt")
 SacPS::Auth::Citadele.private_key = File.read("#{Rails.root}/certs/citadele.key")
 ```
 
-#### Add secret environmental variables
-ENV["CITADELE_PRIVATE_CERT"]="QqIIFhDCCA2wCCQCegSod3..."
-CITADELE_IDENTIFIER="10000"
+#### Add secret environmental variables (nano /etc/environment)
+```
+CITADELE_PRIVATE_CERT="QqIIFhDCCA2wCCQCegSod3..." # Your certificate stripped of first and last line (the ----BEGIN CERTIFICATE stuff)
+CITADELE_IDENTIFIER="10000" # Your identifier here
+```
 
 #### Initialize the helper
 ```ruby
-@request_helper = SacPS::Auth::Citadele::Helper.new
+@request_helper = SacPS::Auth::Citadele.helper
 ```
 
 #### Build an automatic submit form
@@ -38,7 +40,7 @@ Use SacPS::Auth::Citadele.service_url and @request_helper.xml
 #### Expect a response at the return_url you specified
 ##### Instantiate a notification object
 ```ruby
-@response = SacPS::Auth::Citadele::Notification.new(params[:xmlResponse])
+@response = SacPS::Auth::Citadele.notification(params[:xmlResponse])
 ```
 
 ##### Check if response is valid and process

@@ -53,7 +53,6 @@ module SacPS
           true
         end
 
-        # TO-DO: Verify timestamp being within 15 minutes (900s)
         def timestamp_ok?
           stamp = response_hash["Timestamp"]; stamp_i = stamp.to_datetime.to_i
           now   = Time.now.strftime("%Y%m%d%H%M%S%3N"); now_i = now.to_datetime.to_i

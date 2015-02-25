@@ -1,5 +1,6 @@
 require 'sacps/auth/citadele/helper'
 require 'sacps/auth/citadele/notification'
+require 'sacps/auth/citadele/xml_builder'
 
 module SacPS
   module Auth
