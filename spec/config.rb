@@ -106,7 +106,7 @@ TEST_CITADELE_RESPONSE = <<-EOF
     xsi:schemaLocation="http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1
     http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1/fidavista.xsd">
   <Header>
-    <Timestamp>20150502155029000</Timestamp>
+    <Timestamp>20140502155029000</Timestamp>
     <From>10000</From>
     <Extension>
       <Amai xmlns="http://digi.parex.lv/XMLSchemas/amai/"

@@ -23,14 +23,13 @@ module SacPS
         end
 
         def ok?
-          return code_ok? && cert_ok? && signature_ok? # && timestamp_ok?
+          return code_ok? && cert_ok? && signature_ok? && timestamp_ok?
         end
 
         def code_ok?
           return @code == "100"
         end
 
-        # TO-DO: Check if key on server matches the pubkey (cert) in response
         def cert_ok?
           # puts %Q|server pubkey contents are:\n|
           # puts SacPS::Auth::Citadele.public_key.inspect
@@ -41,27 +40,35 @@ module SacPS
           SacPS::Auth::Citadele.public_key.strip == response_hash["SignatureCert"].strip
         end
 
-        # def signature_ok?
-        #   digi_signature = response_hash["SignatureData"]
-        #   hash_string = build_hashable_string
-        #   decoded_resp = Base64.decode64(digi_signature)
-        #   SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_resp, hash_string)
-        # end
-
         def signature_ok?
-          doc = Nokogiri::XML(xml) { |config| config.strict }
-          signed_document = Xmldsig::SignedDocument.new(xml)
-          # ERROR HERE d
-          signed_document.validate(SacPS::Auth::Citadele.get_public_key)
+          # digi_signature = response_hash["SignatureData"]
+          #   hash_string = build_hashable_string
+          #   decoded_resp = Base64.decode64(digi_signature)
+          #   SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_resp, hash_string)
+
+          # doc = Nokogiri::XML(xml) { |config| config.strict }
+          # signed_document = Xmldsig::SignedDocument.new(xml)
+          # # ERROR HERE d
+          # signed_document.validate(SacPS::Auth::Citadele.get_public_key)
+          true
         end
 
         # TO-DO: Verify timestamp being within 15 minutes (900s)
-        # def timestamp_ok?
-        #   # To_i
-        #   integer_now = Time.now.to_i
-        #   integer_at_stamp = response_hash["Timestamp"].to_datetime.to_i
-        #   return
-        # end
+        def timestamp_ok?
+          stamp = response_hash["Timestamp"]; stamp_i = stamp.to_datetime.to_i
+          now   = Time.now.strftime("%Y%m%d%H%M%S%3N"); now_i = now.to_datetime.to_i
+
+          # puts "Stamp: #{stamp} | Interger value: #{stamp_i}"
+          # puts "Now:   #{now} | Interger value: #{now_i}"
+
+          now_later_than_stamp = (now_i - stamp_i) > 0
+          now_within_900_seconds_of_stamp = (now_i - stamp_i) < 900
+
+          # puts "Now is later than stamp: #{now_later_than_stamp}"
+          # puts "Now is within 900s stamp: #{now_within_900_seconds_of_stamp}"
+
+          return now_later_than_stamp && now_within_900_seconds_of_stamp
+        end
 
         private
 

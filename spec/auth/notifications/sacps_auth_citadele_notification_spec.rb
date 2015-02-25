@@ -24,8 +24,12 @@ describe SacPS::Auth::Seb::Notification do
       expect(valid_notification.from).to eq "CITADELE"
     end
 
-    xit "should extract the signature correctly" do
-      expect(valid_notification.response_hash["SignatureValue"]).to eq 1
+    it "should return correct uuid" do
+      expect(valid_notification.uuid).to eq "68a434e6-1763-7b3c-7b64-d0f327738334"
+    end
+
+    it "should extract the signature correctly" do
+      expect(valid_notification.response_hash["SignatureValue"]).to eq "GFzAo2U5fY..."
     end
 
     it "should extract the cert correctly" do
@@ -68,18 +72,27 @@ describe SacPS::Auth::Seb::Notification do
   end
 
   describe "Timestamp" do
-    xit "should TRUE timestamp if within 15 minutes" do
-      now = Time.now.strftime("%Y%m%d%H%M%S%3N")
+    it "should TRUE timestamp if within 15 minutes" do
+      now = (Time.now - 60.seconds).strftime("%Y%m%d%H%M%S%3N")
       valid_notification.response_hash["Timestamp"] = now
-      expect(valid_notification.timestamp_ok?).to eq 1
+      expect(valid_notification.timestamp_ok?).to eq true
     end
-    xit "should FALSE timestamp if outside 15 minutes" do
-      expect(valid_notification.timestamp_ok?).to eq "CITADELE"
+    it "should FALSE timestamp if stamp is newer than now" do
+      now = (Time.now + 160.seconds).strftime("%Y%m%d%H%M%S%3N")
+      valid_notification.response_hash["Timestamp"] = now
+      expect(valid_notification.timestamp_ok?).to eq false
+    end
+    it "should FALSE timestamp if stamp is older than 900s" do
+      now = (Time.now - 900.seconds).strftime("%Y%m%d%H%M%S%3N")
+      valid_notification.response_hash["Timestamp"] = now
+      expect(valid_notification.timestamp_ok?).to eq false
     end
   end
 
-  xit "should return correct verification status" do
-    expect(valid_notification.ok?).to eq 1 # set to true if passes
+  it "should return correct verification status" do
+    now = (Time.now - 60.seconds).strftime("%Y%m%d%H%M%S%3N")
+    valid_notification.response_hash["Timestamp"] = now
+    expect(valid_notification.ok?).to eq true
   end
 
 
