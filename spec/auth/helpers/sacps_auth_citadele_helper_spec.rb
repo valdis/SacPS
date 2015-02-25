@@ -7,6 +7,7 @@ describe SacPS::Auth::Citadele::Helper do
   let(:helper) { SacPS::Auth::Citadele.helper }
 
   it "should initialize helper with no arguments" do
+    SacPS::Auth::Citadele.validate_config
     puts helper.xml#.gsub(/\>\s+\</, '><').gsub(/\n/, '')
     expect(helper.present?).to eq true
   end

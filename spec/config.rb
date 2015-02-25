@@ -46,6 +46,7 @@ C82uR/wUZJDw9kj+R1O46/byG8yA+S9FVw==
 EOF
 
 SacPS::Auth::Citadele.private_key = ENV["CITADELE_PRIVKEY"]
+SacPS::Auth::Citadele.private_cert = ENV["CITADELE_PRIVATE_CERT"]
 SacPS::Auth::Citadele.public_key = <<-EOF
 -----BEGIN CERTIFICATE-----
 MIIFhDCCA2wCCQCegSod3y7vmjANBgkqhkiG9w0BAQUFADCBgzELMAkGA1UEBhMC

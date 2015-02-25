@@ -10,7 +10,6 @@ module SacPS
           :timestamp, :request, :version, :language, :ivis_url, :amai_url
 
         def initialize
-          raise "Citadele cert init failed! See readme." if SacPS::Auth::Citadele.identifier.blank? || SacPS::Auth::Citadele.private_key.blank?
           @identifier = SacPS::Auth::Citadele.identifier
           @return_url = SacPS::Auth::Citadele.return_url
 

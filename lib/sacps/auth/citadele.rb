@@ -17,13 +17,18 @@ module SacPS
       SacPS::Auth::Citadele.return_url  = "https://your-domain.com/auth/citadele"
       SacPS::Auth::Citadele.identifier  = ENV["CITADELE_IDENTIFIER"] # Your merchant number with Citadele
 
-
       def self.validate_config
-        if SacPS::Auth::Citadele.private_key.blank? ||
-        SacPS::Auth::Citadele.private_cert.blank? ||
-        SacPS::Auth::Citadele.public_key.blank?
-          raise "Citadele init contains blank values, review README"
+        message = []
+        if SacPS::Auth::Citadele.private_key.blank?
+          message << "No Private Key!"
         end
+        if SacPS::Auth::Citadele.private_cert.blank?
+          message << "No Private Cert!"
+        end
+        if SacPS::Auth::Citadele.public_key.blank?
+          message << "No Public Key!"
+        end
+        raise "Citadele init contains blank values, review README. Errors:\n#{message.join("\n")}" if message.any?
       end
 
       def self.notification xml
