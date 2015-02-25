@@ -4,7 +4,7 @@ module SacPS
       class Notification
 
         attr_reader :xml, :message, :user_identifier, :user_name, :from, :uuid, :digest
-        attr_accessor :response_hash, :code
+        attr_accessor :response_hash, :code, :recalculated_digest
 
         def initialize(xml)
           SacPS::Auth::Citadele.validate_config!
@@ -14,6 +14,7 @@ module SacPS
           @message = @response_hash["Message"]
           @uuid = @response_hash["RequestUID"]
           @digest = @response_hash["DigestValue"]
+          @recalculated_digest = build_digest
 
           @user_identifier = @response_hash["PersonCode"].split("").insert(6,"-").join #=> "123456-12345"
           @user_name       = @response_hash["Person"].split(" ").rotate.join(" ") #=> "JĀNIS BĒRZIŅŠ"
@@ -25,7 +26,7 @@ module SacPS
         end
 
         def ok?
-          return code_ok? && cert_ok? && timestamp_ok? && signature_ok?
+          return code_ok? && digest_ok? && cert_ok? && timestamp_ok? && signature_ok?
         end
 
         def code_ok?
@@ -50,9 +51,20 @@ module SacPS
           end
         end
 
+        def digest_ok?
+          # TO-DO Calculate digest for response
+          puts digest
+          puts recalculated_digest
+          digest == recalculated_digest
+        end
+
         def signature_ok?
           decoded_signature = Base64.decode64(response_hash["SignatureValue"])
+          if digest_ok?
           return SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_signature, digest)
+          else
+            return false
+          end
         end
 
         def timestamp_ok?

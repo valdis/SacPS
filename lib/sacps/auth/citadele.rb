@@ -1,7 +1,3 @@
-require 'sacps/auth/citadele/helper'
-require 'sacps/auth/citadele/notification'
-require 'sacps/auth/citadele/xml_builder'
-
 module SacPS
   module Auth
     module Citadele
@@ -13,9 +9,15 @@ module SacPS
 
       SacPS::Auth::Citadele.private_key = ENV["CITADELE_PRIVKEY"]
       SacPS::Auth::Citadele.private_cert = ENV["CITADELE_PRIVATE_CERT"]
+      SacPS::Auth::Citadele.public_key  = ENV["CITADELE_PUBLIC_KEY"]
       SacPS::Auth::Citadele.service_url = "https://online.citadele.lv/amai/start.htm"
       SacPS::Auth::Citadele.return_url  = "https://your-domain.com/auth/citadele"
       SacPS::Auth::Citadele.identifier  = ENV["CITADELE_IDENTIFIER"] # Your merchant number with Citadele
+
+      require 'sacps/auth/citadele/helper'
+      require 'sacps/auth/citadele/notification'
+      require 'sacps/auth/citadele/helper_xml_builder'
+      require 'sacps/auth/citadele/notification_xml_builder'
 
       def self.validate_config!
         message = []

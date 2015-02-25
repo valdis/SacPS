@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe SacPS::Auth::Citadele::Notification do
-  let(:valid_notification) { SacPS::Auth::Citadele.notification TEST_CITADELE_RESPONSE.strip }
+  let(:valid_notification) { SacPS::Auth::Citadele.notification SacPS::Auth::Citadele::Notification.test_response.strip }
 
   SacPS::Auth::Citadele.return_url = "http://lvh.me:3000/auth/citadele"
 
@@ -34,8 +34,25 @@ describe SacPS::Auth::Citadele::Notification do
       expect(valid_notification.uuid).to eq "68a434e6-1763-7b3c-7b64-d0f327738334"
     end
 
+    it "should return xml top portion" do
+      expect(valid_notification.get_response_head.last(16)).to eq "<Code>100</Code>"
+    end
+
+    it "should return xml bottom portion" do
+      expect(valid_notification.get_response_tail.first(14)).to eq "\n      </Amai>"
+    end
+
+    it "should return correct digestable xml" do
+      a = valid_notification.build_unsigned_response_xml
+      expect(a).to eq "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<FIDAVISTA xmlns=\"http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n    xsi:schemaLocation=\"http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1\n    http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1/fidavista.xsd\">\n  <Header>\n    <Timestamp>20140502155029000</Timestamp>\n    <From>10000</From>\n    <Extension>\n      <Amai xmlns=\"http://digi.parex.lv/XMLSchemas/amai/\"\n          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n          xsi:schemaLocation=\"http://digi.parex.lv/XMLSchemas/amai/\n          http://digi.parex.lv/XMLSchemas/amai/amai.xsd\">\n        <Request>AUTHRESP</Request>\n        <RequestUID>68a434e6-1763-7b3c-7b64-d0f327738334</RequestUID>\n        <Version>3.0</Version>\n        <Language>LV</Language>\n        <PersonCode>01010112345</PersonCode>\n        <Person>BĒRZIŅŠ JĀNIS</Person>\n        <Code>100</Code>\n      </Amai>\n    </Extension>\n  </Header>\n</FIDAVISTA>"
+    end
+
+    it "should return build correct digest from xml cutoff" do
+      expect(valid_notification.recalculated_digest).to eq "z3BWJmWj1oXqcRkQ55O/hCfMY60="
+    end
+
     it "should return correct digest" do
-      expect(valid_notification.digest).to eq "4GRtwEyjYigO+u43v68RU86rkLA="
+      expect(valid_notification.digest).to eq "z3BWJmWj1oXqcRkQ55O/hCfMY60="
     end
 
     it "should extract the signature correctly" do
@@ -72,6 +89,17 @@ describe SacPS::Auth::Citadele::Notification do
     end
     it "should unpack cert correctly" do
       expect(OpenSSL::X509::Certificate.new(SacPS::Auth::Citadele.public_key).to_text).to match "Citadele Banka AS"
+    end
+  end
+
+  describe "Digest" do
+    # These require legitimate signature hash+signature combination
+    it "should TRUE if both digests are the same" do
+      expect(valid_notification.digest_ok?).to eq true
+    end
+    it "should FALSE if digests differ" do
+      valid_notification.recalculated_digest = "a3QWJmWj1oXqcRkQ55O/hCfMY71="
+      expect(valid_notification.digest_ok?).to eq false
     end
   end
 
