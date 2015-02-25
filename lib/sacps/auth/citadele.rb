@@ -17,7 +17,7 @@ module SacPS
       SacPS::Auth::Citadele.return_url  = "https://your-domain.com/auth/citadele"
       SacPS::Auth::Citadele.identifier  = ENV["CITADELE_IDENTIFIER"] # Your merchant number with Citadele
 
-      def self.validate_config
+      def self.validate_config!
         message = []
         if SacPS::Auth::Citadele.private_key.blank?
           message << "No Private Key!"

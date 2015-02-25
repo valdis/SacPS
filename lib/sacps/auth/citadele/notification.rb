@@ -3,16 +3,17 @@ module SacPS
     module Citadele
       class Notification
 
-        attr_reader :xml, :message, :user_identifier, :user_name, :from, :uuid
+        attr_reader :xml, :message, :user_identifier, :user_name, :from, :uuid, :digest
         attr_accessor :response_hash, :code
 
         def initialize(xml)
-          SacPS::Auth::Citadele.validate_config
+          SacPS::Auth::Citadele.validate_config!
           @xml = xml.gsub("&quot;", '"')
           @response_hash = parse_response(@xml)
           @code = @response_hash["Code"]
           @message = @response_hash["Message"]
           @uuid = @response_hash["RequestUID"]
+          @digest = @response_hash["DigestValue"]
 
           @user_identifier = @response_hash["PersonCode"].split("").insert(6,"-").join #=> "123456-12345"
           @user_name       = @response_hash["Person"].split(" ").rotate.join(" ") #=> "JĀNIS BĒRZIŅŠ"
@@ -24,7 +25,7 @@ module SacPS
         end
 
         def ok?
-          return code_ok? && cert_ok? && signature_ok? && timestamp_ok?
+          return code_ok? && cert_ok? && timestamp_ok? && signature_ok?
         end
 
         def code_ok?
@@ -37,21 +38,21 @@ module SacPS
 
           # puts %Q|response_hash["SignatureCert"] contents are:\n|
           # puts response_hash["SignatureCert"].inspect
+          begin
+            response_cert_as_text = OpenSSL::X509::Certificate.new( response_hash["SignatureCert"] ).to_text
+            # puts SacPS::Auth::Citadele.public_key.strip == response_hash["SignatureCert"].strip
+            # puts response_cert_as_text.match("Citadele Banka AS").present?
 
-          SacPS::Auth::Citadele.public_key.strip == response_hash["SignatureCert"].strip
+            SacPS::Auth::Citadele.public_key.strip == response_hash["SignatureCert"].strip &&
+            response_cert_as_text.match("Citadele Banka AS").present?
+          rescue
+            false
+          end
         end
 
         def signature_ok?
-          # digi_signature = response_hash["SignatureData"]
-          #   hash_string = build_hashable_string
-          #   decoded_resp = Base64.decode64(digi_signature)
-          #   SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_resp, hash_string)
-
-          # doc = Nokogiri::XML(xml) { |config| config.strict }
-          # signed_document = Xmldsig::SignedDocument.new(xml)
-          # # ERROR HERE d
-          # signed_document.validate(SacPS::Auth::Citadele.get_public_key)
-          true
+          decoded_signature = Base64.decode64(response_hash["SignatureValue"])
+          return SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_signature, digest)
         end
 
         def timestamp_ok?
@@ -73,31 +74,32 @@ module SacPS
         private
 
           def parse_response xml
-            @response = Nokogiri::XML(xml) do |config|
+            doc = Nokogiri::XML(xml) do |config|
               config.strict.nonet
             end
-            @response.remove_namespaces!
+            doc.remove_namespaces!
 
             return {
-              "Timestamp" => @response.xpath("//Timestamp").text,
-              "From" => @response.xpath("//From").text,
-              "Request" => @response.xpath("//Request").text,
-              "RequestUID" => @response.xpath("//RequestUID").text,
-              "Version" => @response.xpath("//Version").text,
-              "Language" => @response.xpath("//Language").text,
-              "PersonCode" => @response.xpath("//PersonCode").text,
-              "Person" => @response.xpath("//Person").text,
-              "Code" => @response.xpath("//Code").text, # Important
-              "Message" => @response.xpath("//Message").text,
-              "SignatureValue" => @response.xpath("//SignatureValue").text.strip,
-              "SignatureCert" => @response.xpath("//X509Certificate").text.strip
+              "Timestamp" => doc.xpath("//Timestamp").text,
+              "From" => doc.xpath("//From").text,
+              "Request" => doc.xpath("//Request").text,
+              "RequestUID" => doc.xpath("//RequestUID").text,
+              "Version" => doc.xpath("//Version").text,
+              "Language" => doc.xpath("//Language").text,
+              "PersonCode" => doc.xpath("//PersonCode").text,
+              "Person" => doc.xpath("//Person").text,
+              "Code" => doc.xpath("//Code").text, # Important
+              "Message" => doc.xpath("//Message").text,
+              "DigestValue" => doc.xpath("//DigestValue").text,
+              "SignatureValue" => doc.xpath("//SignatureValue").text.strip,
+              "SignatureCert" => doc.xpath("//X509Certificate").text.strip
               }
           end
 
-          def build_hashable_string
-            rh = @response_hash
-            return "#{rh["Timestamp"]}#{rh["From"]}#{rh["Request"]}#{rh["RequestUID"]}#{rh["Version"]}#{rh["Language"]}#{rh["PersonCode"]}#{rh["Person"]}#{rh["Code"]}#{rh["Message"]}"
-          end
+          # def build_hashable_string
+          #   rh = @response_hash
+          #   return "#{rh["Timestamp"]}#{rh["From"]}#{rh["Request"]}#{rh["RequestUID"]}#{rh["Version"]}#{rh["Language"]}#{rh["PersonCode"]}#{rh["Person"]}#{rh["Code"]}#{rh["Message"]}"
+          # end
 
       end # -- Ends class
     end
