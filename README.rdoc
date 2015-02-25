@@ -15,6 +15,7 @@ SacPS::Auth::Citadele.service_url = "https://online.citadele.lv/amai/start.htm" 
 SacPS::Auth::Citadele.public_key  = File.read("#{Rails.root}/certs/citadele.crt")
 SacPS::Auth::Citadele.private_key = ENV["CITADELE_PRIVKEY"]
 SacPS::Auth::Citadele.private_cert = ENV["CITADELE_PRIVATE_CERT"]
+SacPS::Auth::Citadele.validate_config # This will raise an error if you missed something
 ```
 
 #### Initialize the helper

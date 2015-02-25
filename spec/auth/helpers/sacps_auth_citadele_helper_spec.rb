@@ -7,6 +7,7 @@ describe SacPS::Auth::Citadele::Helper do
   let(:helper) { SacPS::Auth::Citadele.helper }
 
   it "should initialize helper with no arguments" do
+    puts helper.xml#.gsub(/\>\s+\</, '><').gsub(/\n/, '')
     expect(helper.present?).to eq true
   end
 
@@ -27,7 +28,6 @@ describe SacPS::Auth::Citadele::Helper do
   # rspec spec/auth/helpers/sacps_auth_citadele_helper_spec.rb:28
   it "should make valid xml" do
     array = helper.xml.split("\n")
-    puts helper.xml#.gsub(/\>\s+\</, '><').gsub(/\n/, '')
     expect(array[3]).to include "Timestamp"
   end
 
