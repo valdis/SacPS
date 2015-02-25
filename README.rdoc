@@ -19,6 +19,16 @@ SacPS::Auth::Citadele.private_key = File.read("#{Rails.root}/certs/citadele.key"
 ```ruby
 @request_helper = SacPS::Auth::Citadele.helper
 ```
+##### Helper methods
+```ruby
+  @request_helper.identifier #=> "10000"
+  @request_helper.return_url #=> "http://www.some-domain.com"
+  @request_helper.uuid       #=> "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
+  @request_helper.xml        #=>
+<?xml version="1.0"?>
+<FIDAVISTA xmlns="http...
+  @request_helper.form_fields #=> { "xmldata" => @request_helper.xml }
+```
 
 #### Build an automatic submit form
 Use SacPS::Auth::Citadele.service_url and @request_helper.xml
@@ -49,4 +59,9 @@ if @response.ok?
   @response.user_identifier #=> "123456-12345"
   @response.user_name       #=> "BĒRZIŅŠ JĀNIS" (< Citadele default)
   @response.from            #=> "CITADELE"
+  @response.xml             #=> XML content
+  @response.response_hash   #=> Nokogiri extracted values of XML content
+  @response.code            #=> "100", "200" or "300"
+  @response.message         #=> Only present if code !"100"
+  @response.uuid            #=> "7387bf5b-fa27-4fdd-add6-a6bfb2599f77" (the same you supplied)
 ```
