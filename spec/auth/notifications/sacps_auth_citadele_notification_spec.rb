@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe SacPS::Auth::Seb::Notification do
+describe SacPS::Auth::Citadele::Notification do
   let(:valid_notification) { SacPS::Auth::Citadele.notification TEST_CITADELE_RESPONSE.strip }
 
   SacPS::Auth::Citadele.return_url = "http://lvh.me:3000/auth/citadele"

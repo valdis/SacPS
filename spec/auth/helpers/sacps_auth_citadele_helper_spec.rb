@@ -15,7 +15,7 @@ describe SacPS::Auth::Citadele::Helper do
   end
 
   it "should initialize with an unique_identifier" do
-    puts uuid = helper.unique_identifier
+    puts uuid = helper.uuid
     expect(uuid.present?).to eq true
     expect(uuid.size).to eq 36
   end
