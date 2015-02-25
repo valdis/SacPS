@@ -35,5 +35,29 @@ describe SacPS::Auth::Citadele::Helper do
     expect(helper.form_fields.size).to eq 1
   end
 
+  it "should create correct digest" do
+    expect(helper.digest.size).to be > 20
+    expect(helper.digest.last).to eq "="
+  end
+
+  it "should create correct signed_info xml element block" do
+    array = helper.signed_info.split("\n")
+    expect(array[8].strip).to match(/\<DigestValue\>.*\=\<\/DigestValue\>/)
+  end
+
+  it "should create correct signature" do
+    expect(helper.signature.last).to eq "="
+  end
+
+  it "signature should verify" do
+    helper_instance = helper
+    decoded_ignature = Base64.decode64(helper_instance.signature)
+    state = SacPS::Auth::Citadele.get_private_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_ignature, helper_instance.signed_info)
+
+    expect(state).to eq true
+  end
+
+
+
 
 end

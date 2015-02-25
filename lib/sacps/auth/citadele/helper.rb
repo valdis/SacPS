@@ -6,13 +6,26 @@ module SacPS
         include SacPS::Auth::Common
         include SacPS::Auth::Citadele
 
-        attr_accessor :identifier, :return_url, :xml, :form_fields, :uuid
+        attr_accessor :identifier, :return_url, :xml, :form_fields, :uuid, :unsigned_xml_part, :digest, :signed_info, :signature,
+          :timestamp, :request, :version, :language, :ivis_url, :amai_url
 
         def initialize
           raise "Citadele cert init failed! See readme." if ENV["CITADELE_IDENTIFIER"].blank? || SacPS::Auth::Citadele.private_key.blank?
           @identifier = SacPS::Auth::Citadele.identifier
           @return_url = SacPS::Auth::Citadele.return_url
+
+          @timestamp = Time.now.strftime("%Y%m%d%H%M%S%3N") # "20030905175959000"
+          @request = "AUTHREQ"
+          @version = "3.0"
+          @language = "LV"
+          @ivis_url = "http://ivis.eps.gov.lv/XMLSchemas/100017/fidavista/v1-1"
+          @amai_url = "http://online.citadele.lv/XMLSchemas/amai/"
+
           @uuid = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
+          @unsigned_xml_part = build_unsigned_request_xml
+          @digest = build_digest
+          @signed_info = build_signed_info
+          @signature = build_signature
 
           @xml = return_signed_request_xml
           @form_fields = { "xmldata" => @xml }
