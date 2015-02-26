@@ -20,6 +20,17 @@ require 'sacps/base'
 require 'sacps/auth'
 require 'sacps/pay'
 
+class String
+  # Strip leading whitespace from each line that is the same as the
+  # amount of whitespace on the first line of the string.
+  # Leaves _additional_ indentation on later lines intact.
+  # USAGE: xml = <<-XML.unindent
+  #        XML
+  def unindent
+    gsub /^#{self[/\A\s*/]}/, ''
+  end
+end
+
 module SacPS
   ROOT = File.expand_path("../..", __FILE__)
 
