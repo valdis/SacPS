@@ -6,12 +6,12 @@ module SacPS
         def return_signed_request_xml
           xml = <<-XML.unindent
           <?xml version="1.0" encoding="UTF-8" ?>
-          <FIDAVISTA xmlns="#{@ivis_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="#{@ivis_url} #{@ivis_url}/fidavista.xsd">
+          <FIDAVISTA xmlns="#{@ivis_url}" #{@schema_attribute} xsi:schemaLocation="#{@ivis_url} #{@ivis_url}/fidavista.xsd">
             <Header>
               <Timestamp>#{@timestamp}</Timestamp>
               <From>#{@identifier}</From>
               <Extension>
-                <Amai xmlns="#{@amai_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="#{@amai_url} #{@amai_url}amai.xsd">
+                <Amai xmlns="#{@amai_url}" #{@schema_attribute} xsi:schemaLocation="#{@amai_url} #{@amai_url}amai.xsd">
                   <Request>#{@request}</Request>
                   <RequestUID>#{@uuid}</RequestUID>
                   <Version>#{@version}</Version>
@@ -21,12 +21,12 @@ module SacPS
                     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
                       <SignedInfo>
                         <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-                        <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                        <SignatureMethod #{@xmldsig_attribute}rsa-sha1"/>
                         <Reference>
                           <Transforms>
-                            <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                            <Transform #{@xmldsig_attribute}enveloped-signature"/>
                           </Transforms>
-                          <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                          <DigestMethod #{@xmldsig_attribute}sha1"/>
                           <DigestValue>#{@digest}</DigestValue>
                         </Reference>
                       </SignedInfo>
@@ -44,9 +44,10 @@ module SacPS
           </FIDAVISTA>
           XML
 
-          clean_xml = xml.strip.chomp
+          clean_xml = xml.strip
           doc = Nokogiri::XML(clean_xml) { |config| config.strict }
-          return clean_xml #doc.canonicalize
+          return %Q|<?xml version="1.0" encoding="UTF-8" ?>\n| + doc.canonicalize # kanonizēts plus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ?
+          #return clean_xml
           # canonicalized version can not be returned since it cuts off
           # <?xml version="1.0" encoding="UTF-8" ?>
           # Maybe canonicalize and re-add it?
@@ -57,31 +58,38 @@ module SacPS
 
           def build_unsigned_request_xml
             xml = <<-XML.unindent
-            <?xml version="1.0" encoding="UTF-8" ?>
-            <FIDAVISTA xmlns="#{@ivis_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="#{@ivis_url} #{@ivis_url}/fidavista.xsd">
+            <FIDAVISTA xmlns="#{@ivis_url}" #{@schema_attribute} xsi:schemaLocation="#{@ivis_url} #{@ivis_url}/fidavista.xsd">
               <Header>
                 <Timestamp>#{@timestamp}</Timestamp>
                 <From>#{@identifier}</From>
                 <Extension>
-                  <Amai xmlns="#{@amai_url}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="#{@amai_url} #{@amai_url}amai.xsd">
+                  <Amai xmlns="#{@amai_url}" #{@schema_attribute} xsi:schemaLocation="#{@amai_url} #{@amai_url}amai.xsd">
                     <Request>#{@request}</Request>
-                    <RequestUID>#{@unique_identifier}</RequestUID>
+                    <RequestUID>#{@uuid}</RequestUID>
                     <Version>#{@version}</Version>
                     <Language>#{@language}</Language>
                     <ReturnURL>#{@return_url}</ReturnURL>
-                    <SignatureData></SignatureData>
+                    <SignatureData/>
                   </Amai>
                 </Extension>
               </Header>
             </FIDAVISTA>
             XML
 
-            clean_xml = xml.strip.chomp
-            doc = Nokogiri::XML(clean_xml) { |config| config.strict }
-            return doc.canonicalize
+            clean_xml = xml.strip
+            # puts Nokogiri::XML(clean_xml) { |config| config.strict }
+            # puts "<<<<<<<<<>>>>>>>>>>>>>>"
+            # puts Nokogiri::XML(clean_xml) { |config| config.strict }.canonicalize
+            #return Nokogiri::XML(clean_xml) { |config| config.strict }.canonicalize
+            nokogiri_canon_array = Nokogiri::XML(clean_xml) { |config| config.strict }.canonicalize.split("\n")
+            #puts nokogiri_canon_array
+            nokogiri_canon_array[5] = %Q|<Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/http://online.citadele.lv/XMLSchemas/amai/amai.xsd">|
+            return nokogiri_canon_array.join("\n")
           end
 
           def build_digest
+            puts Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part) ).strip
+            puts Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part.lineify) ).strip
             Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part) ).strip
           end
 
@@ -89,18 +97,18 @@ module SacPS
             signed_info = <<-XML.unindent
             <SignedInfo>
               <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-              <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+              <SignatureMethod #{@xmldsig_attribute}rsa-sha1"/>
               <Reference>
                 <Transforms>
-                  <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                  <Transform #{@xmldsig_attribute}enveloped-signature"/>
                 </Transforms>
-                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                <DigestMethod #{@xmldsig_attribute}sha1"/>
                 <DigestValue>#{@digest}</DigestValue>
               </Reference>
             </SignedInfo>
             XML
 
-            clean_xml = signed_info.strip
+            clean_xml = signed_info.strip#.lineify
             return Nokogiri::XML(clean_xml) { |config| config.strict }.canonicalize
           end
 

@@ -8,8 +8,13 @@ describe SacPS::Auth::Citadele::Helper do
 
   it "should initialize helper with no arguments" do
     SacPS::Auth::Citadele.validate_config!
+    puts helper.unsigned_xml_part
+    puts "\n=============================\n\n"
+    puts helper.signed_info
+    puts "\n=============================\n\n"
     puts helper.xml
-    #puts helper.xml.gsub(/\n/, '').gsub(/\>\s+\</, '><')
+
+    #puts helper.xml.lineify
     expect(helper.present?).to eq true
   end
 

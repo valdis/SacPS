@@ -29,6 +29,10 @@ class String
   def unindent
     gsub /^#{self[/\A\s*/]}/, ''
   end
+
+  def lineify
+    gsub(/\n/,'').gsub(/\>\s+\</, '><')
+  end
 end
 
 module SacPS
