@@ -25,7 +25,7 @@ module SacPS
           "#{@user_identifier};#{@user_name}"
         end
 
-        def ok?
+        def valid?
           return code_ok? && digest_ok? && cert_ok? && timestamp_ok? && signature_ok?
         end
 
@@ -61,7 +61,7 @@ module SacPS
         def signature_ok?
           decoded_signature = Base64.decode64(response_hash["SignatureValue"])
           if digest_ok?
-          return SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_signature, digest)
+            return SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_signature, digest)
           else
             return false
           end

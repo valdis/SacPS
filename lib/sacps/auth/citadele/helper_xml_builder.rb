@@ -3,6 +3,8 @@ module SacPS
     module Citadele
       class Helper
 
+        HELPER_LINE = %Q|      <Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/http://online.citadele.lv/XMLSchemas/amai/amai.xsd">|
+
         def return_signed_request_xml
           xml = <<-XML.unindent
           <?xml version="1.0" encoding="UTF-8" ?>
@@ -33,7 +35,7 @@ module SacPS
                       <SignatureValue>#{@signature}</SignatureValue>
                       <KeyInfo>
                         <X509Data>
-                          <X509Certificate>#{SacPS::Auth::Citadele.private_cert}</X509Certificate>
+                          <X509Certificate>#{SacPS::Auth::Citadele.private_cert.gsub("\n",'')}</X509Certificate>
                         </X509Data>
                       </KeyInfo>
                     </Signature>
@@ -46,7 +48,10 @@ module SacPS
 
           clean_xml = xml.strip
           doc = Nokogiri::XML(clean_xml) { |config| config.strict }
-          return %Q|<?xml version="1.0" encoding="UTF-8" ?>\n| + doc.canonicalize # kanonizēts plus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ?
+          canonicalized_array = doc.canonicalize.split("\n")
+          canonicalized_array[5] = HELPER_LINE
+          #puts "^^^^^^^^^"
+          return %Q|<?xml version="1.0" encoding="UTF-8" ?>\n| + canonicalized_array.join("\n") # kanonizēts plus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ?
           #return clean_xml
           # canonicalized version can not be returned since it cuts off
           # <?xml version="1.0" encoding="UTF-8" ?>
@@ -77,19 +82,16 @@ module SacPS
             XML
 
             clean_xml = xml.strip
-            # puts Nokogiri::XML(clean_xml) { |config| config.strict }
-            # puts "<<<<<<<<<>>>>>>>>>>>>>>"
-            # puts Nokogiri::XML(clean_xml) { |config| config.strict }.canonicalize
             #return Nokogiri::XML(clean_xml) { |config| config.strict }.canonicalize
             nokogiri_canon_array = Nokogiri::XML(clean_xml) { |config| config.strict }.canonicalize.split("\n")
-            #puts nokogiri_canon_array
-            nokogiri_canon_array[5] = %Q|<Amai xmlns="http://online.citadele.lv/XMLSchemas/amai/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://online.citadele.lv/XMLSchemas/amai/http://online.citadele.lv/XMLSchemas/amai/amai.xsd">|
+            nokogiri_canon_array[5] = HELPER_LINE
             return nokogiri_canon_array.join("\n")
           end
 
           def build_digest
-            puts Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part) ).strip
-            puts Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part.lineify) ).strip
+            # "Digests ˇˇ"
+            # puts Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part) ).strip
+            # puts Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part.gsub(/\A\s+/, '')) ).strip
             Base64.encode64( OpenSSL::Digest::SHA1.digest(@unsigned_xml_part) ).strip
           end
 
@@ -115,7 +117,7 @@ module SacPS
           def build_signature
                 privkey = SacPS::Auth::Citadele.get_private_key
             signed_hash = privkey.sign(OpenSSL::Digest::SHA1.new, @signed_info)
-            return Base64.encode64(signed_hash).strip
+            return Base64.encode64(signed_hash).strip.gsub("\n", '') # TEST
           end
 
       end

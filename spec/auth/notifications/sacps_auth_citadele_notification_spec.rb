@@ -10,7 +10,7 @@ describe SacPS::Auth::Citadele::Notification do
   xit "should return correct verification status" do
     now = (Time.now - 60.seconds).strftime("%Y%m%d%H%M%S%3N")
     valid_notification.response_hash["Timestamp"] = now
-    expect(valid_notification.ok?).to eq true
+    expect(valid_notification.valid?).to eq true
   end
 
   describe "Initialization" do

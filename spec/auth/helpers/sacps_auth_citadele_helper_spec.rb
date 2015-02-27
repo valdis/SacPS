@@ -14,7 +14,7 @@ describe SacPS::Auth::Citadele::Helper do
     puts "\n=============================\n\n"
     puts helper.xml
 
-    #puts helper.xml.lineify
+    #puts helper.xml.lineify # Quicker fail, unlikely veracity
     expect(helper.present?).to eq true
   end
 
@@ -56,15 +56,18 @@ describe SacPS::Auth::Citadele::Helper do
     expect(helper.signature.last).to eq "="
   end
 
+  it "multiline signature should verify" do
+    helper_instance = helper
+    decoded_signature = Base64.decode64(helper_instance.signature)
+    state1 = SacPS::Auth::Citadele.get_private_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_signature, helper_instance.signed_info)
+    expect(state1).to eq true
+  end
   it "signature should verify" do
     helper_instance = helper
-    decoded_ignature = Base64.decode64(helper_instance.signature)
-    state = SacPS::Auth::Citadele.get_private_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_ignature, helper_instance.signed_info)
-
-    expect(state).to eq true
+    stripped_sig = Base64.decode64(helper_instance.signature.gsub("\n", ''))
+    state2 = SacPS::Auth::Citadele.get_private_key.public_key.verify(OpenSSL::Digest::SHA1.new, stripped_sig, helper_instance.signed_info)
+    expect(state2).to eq true
   end
-
-
 
 
 end
