@@ -25,6 +25,14 @@ module SacPS
           "#{@user_identifier};#{@user_name}"
         end
 
+        def user_identifier
+          user_information.split(";").first
+        end
+
+        def user_name
+          user_information.split(";").last
+        end
+
         def ok?
           return code_ok? && digest_ok? && cert_ok? && timestamp_ok? && signature_ok?
         end
