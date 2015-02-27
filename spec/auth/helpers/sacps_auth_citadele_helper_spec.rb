@@ -69,5 +69,4 @@ describe SacPS::Auth::Citadele::Helper do
     expect(state2).to eq true
   end
 
-
 end
