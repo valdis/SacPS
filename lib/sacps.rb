@@ -15,10 +15,15 @@ require 'openssl'
 
 require 'cgi'
 
-require 'sacps/sacps'
-require 'sacps/base'
-require 'sacps/auth'
-require 'sacps/pay'
+require 'sacps/auth/auth'
+  require 'sacps/auth/swedbank'
+  require 'sacps/auth/seb'
+  require 'sacps/auth/dnb'
+  require 'sacps/auth/citadele'
+  require 'sacps/auth/nordea'
+
+require 'sacps/pay/pay'
+require 'sacps/errors/errors'
 
 class String
   # Strip leading whitespace from each line that is the same as the
@@ -32,6 +37,12 @@ class String
 
   def lineify
     gsub(/\n/,'').gsub(/\>\s+\</, '><')
+  end
+end
+
+class Hash
+  def to_params
+    map{ |k, v| URI.escape("#{k}=#{v}") }.join("&")
   end
 end
 

@@ -1,7 +1,8 @@
 module SacPS
   module Auth
     module Citadele
-      class Helper
+      #include StandardError::SacPSErrors::CitadeleErrors
+      class Helper# < SacPS
 
         include SacPS::Auth::Common
         include SacPS::Auth::Citadele
