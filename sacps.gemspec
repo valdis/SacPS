@@ -28,5 +28,5 @@ Gem::Specification.new do |s|
   s.add_dependency "activesupport"
   s.add_dependency "builder", '>= 2.0'
   s.add_dependency "nokogiri"
-  s.add_dependency "xmldsig"
+  s.add_dependency "xmldsig", '0.2.5'
 end

@@ -17,6 +17,7 @@ module SacPS
       require 'sacps/auth/citadele/helper'
       require 'sacps/auth/citadele/notification'
       require 'sacps/auth/citadele/helper_xml_builder'
+      require 'sacps/auth/citadele/helper_xml_builder2'
       require 'sacps/auth/citadele/notification_xml_builder'
 
       def self.validate_config!
@@ -33,12 +34,16 @@ module SacPS
         raise "Citadele init contains blank values, review README. Errors:\n#{message.join("\n")}" if message.any?
       end
 
-      def self.notification xml
-        Notification.new xml
-      end
-
       def self.helper
         Helper.new
+      end
+
+      def self.helper2
+        Helper2.new
+      end
+
+      def self.notification xml
+        Notification.new xml
       end
 
       def self.get_public_key

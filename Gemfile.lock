@@ -5,7 +5,7 @@ PATH
       activesupport
       builder (>= 2.0)
       nokogiri
-      xmldsig
+      xmldsig (= 0.2.5)
 
 GEM
   remote: https://rubygems.org/

@@ -24,10 +24,10 @@ module SacPS
           @xmldsig_attribute = %Q|Algorithm="http://www.w3.org/2000/09/xmldsig#|
           @uuid = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
 
-          @unsigned_xml_part = build_unsigned_request_xml
-          @digest = build_digest
-          @signed_info = build_signed_info
-          @signature = build_signature
+          # @unsigned_xml_part = build_unsigned_request_xml
+          # @digest = build_digest
+          # @signed_info = build_signed_info
+          # @signature = build_signature
           @xml = return_signed_request_xml
           @form_fields = { "xmldata" => @xml }
         end
