@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "priscilla"
   s.add_development_dependency "dotenv"
 
-  s.add_dependency 'activesupport', '~> 4.2.0'
+  s.add_dependency 'activesupport'
   s.add_dependency "builder", '>= 2.0'
   s.add_dependency "nokogiri"
   s.add_dependency "xmldsig", '0.2.5'
