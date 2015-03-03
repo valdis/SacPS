@@ -1,12 +1,12 @@
-module SacPS
-  module Errors
-    class SacPSErrors < StandardError
+# module SacPS
+#   module Errors
+#     class SacPSErrors < StandardError
 
 
-    end
+#     end
 
-  end
-end
+#   end
+# end
 
 
 

@@ -1,6 +1,7 @@
 require 'sacps/version'
 
 require "base64"
+require "active_support"
 require "active_support/dependencies"
 require "active_support/concern"
 require "active_support/core_ext"
@@ -15,15 +16,9 @@ require 'openssl'
 
 require 'cgi'
 
-require 'sacps/auth/auth'
-  require 'sacps/auth/citadele'
-  require 'sacps/auth/dnb'
-  require 'sacps/auth/nordea'
-  require 'sacps/auth/seb'
-  require 'sacps/auth/swedbank'
-
-require 'sacps/pay/pay'
-require 'sacps/errors/errors'
+require 'sacps/base'
+require 'sacps/auth'
+require 'sacps/pay'
 
 class String
   # Strip leading whitespace from each line that is the same as the

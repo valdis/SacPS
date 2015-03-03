@@ -4,6 +4,7 @@ require 'spec_helper'
 
 describe SacPS::Auth::Citadele::Notification do
   let(:valid_notification) { SacPS::Auth::Citadele.notification SacPS::Auth::Citadele::Notification.test_response.strip }
+  let(:valid_notification2) { SacPS::Auth::Citadele.notification SacPS::Auth::Citadele::Notification.test_resp2.strip }
 
   SacPS::Auth::Citadele.return_url = "http://lvh.me:3000/auth/citadele"
 
@@ -11,6 +12,17 @@ describe SacPS::Auth::Citadele::Notification do
     now = (Time.now - 60.seconds).strftime("%Y%m%d%H%M%S%3N")
     valid_notification.response_hash["Timestamp"] = now
     expect(valid_notification.valid?).to eq true
+  end
+
+  describe "Citadele given code" do
+    it "response should be valid" do
+      # now = (Time.now - 60.seconds).strftime("%Y%m%d%H%M%S%3N")
+      # valid_notification.response_hash["Timestamp"] = now
+      expect(valid_notification2.valid?).to eq true
+    end
+    it "should return a hash of values" do
+      expect(valid_notification2.user_information).to eq 1
+    end
   end
 
   describe "Initialization" do

@@ -3,8 +3,10 @@ module SacPS
     module Citadele
       class Notification
 
-        attr_reader :xml, :message, :user_identifier, :user_name, :from, :uuid, :digest
-        attr_accessor :response_hash, :code, :recalculated_digest
+        attr_reader :status, :xml, :message, :user_identifier, :user_name, :from, :uuid
+        attr_accessor :response_hash, :code
+
+        IMPLEMENTED_RESPONSES = ['ESERVICEREQ', 'AUTHRESP']
 
         def initialize(xml)
           SacPS::Auth::Citadele.validate_config!
@@ -13,46 +15,11 @@ module SacPS
           @code = @response_hash["Code"]
           @message = @response_hash["Message"]
           @uuid = @response_hash["RequestUID"]
-          @digest = @response_hash["DigestValue"]
-          @recalculated_digest = build_digest
+          @status = self.valid?
 
           @user_identifier = @response_hash["PersonCode"].split("").insert(6,"-").join #=> "123456-12345"
           @user_name       = @response_hash["Person"].split(" ").rotate.join(" ") #=> "JĀNIS BĒRZIŅŠ"
           @from            = "CITADELE"
-        end
-
-        def process_xml raw_xml
-          xmldsig = Xmldsig::SignedDocument.new(raw_xml)
-          valid = xmldsig.validate(provider_certificate)
-          raise InvalidXMLSignatureError unless valid
-
-          parser = Nori.new(:convert_tags_to => lambda { |tag| tag.snakecase.to_sym })
-          xml = parser.parse(raw_xml).try(:[], :fidavista)
-
-          ts = xml.try(:[], :header).try(:[], :timestamp)
-          time = Time.local(
-            ts[0..3].to_i,
-            ts[4..5].to_i,
-            ts[6..7].to_i,
-            ts[8..9].to_i,
-            ts[10..11].to_i,
-            ts[12..13].to_i,
-            ts[14..16].to_i
-          )
-
-          raise RequestExpiredError if time + 15.minutes < Time.now
-
-          response = xml.try(:[], :header).try(:[], :extension).try(:[], :amai)
-          raise UnimplementedRequestError, "#{response[:request]} not implemented" unless IMPLEMENTED_RESPONSES.include? response[:request]
-
-          case response[:code]
-          when '100'
-          when '200'
-            raise AuthenticationCancelledError
-          when '300'
-            raise ServiceError, response[:message]
-          end
-          response
         end
 
         def user_information
@@ -60,45 +27,23 @@ module SacPS
         end
 
         def valid?
-          return code_ok? && digest_ok? && cert_ok? && timestamp_ok? && signature_ok?
+          return code_ok? && request_type_ok? && timestamp_ok? && cert_ok?
         end
 
         def code_ok?
-          return @code == "100"
+          case @code
+          when '100'
+            return true
+          when '200'
+            raise "AuthenticationCancelledError"
+          when '300'
+            raise "ServiceError", @message
+          end
         end
 
         def cert_ok?
-          # puts %Q|server pubkey contents are:\n|
-          # puts SacPS::Auth::Citadele.public_key.inspect
-
-          # puts %Q|response_hash["SignatureCert"] contents are:\n|
-          # puts response_hash["SignatureCert"].inspect
-          begin
-            response_cert_as_text = OpenSSL::X509::Certificate.new( response_hash["SignatureCert"] ).to_text
-            # puts SacPS::Auth::Citadele.public_key.strip == response_hash["SignatureCert"].strip
-            # puts response_cert_as_text.match("Citadele Banka AS").present?
-
-            SacPS::Auth::Citadele.public_key.strip == response_hash["SignatureCert"].strip &&
-            response_cert_as_text.match("Citadele Banka AS").present?
-          rescue
-            false
-          end
-        end
-
-        def digest_ok?
-          # TO-DO Calculate digest for response
-          puts digest
-          puts recalculated_digest
-          digest == recalculated_digest
-        end
-
-        def signature_ok?
-          decoded_signature = Base64.decode64(response_hash["SignatureValue"])
-          if digest_ok?
-            return SacPS::Auth::Citadele.get_public_key.public_key.verify(OpenSSL::Digest::SHA1.new, decoded_signature, digest)
-          else
-            return false
-          end
+          xmldsig = Xmldsig::SignedDocument.new(@xml)
+          xmldsig.validate(SacPS::Auth::Citadele.get_public_key) ? true : (raise "InvalidXMLSignatureError")
         end
 
         def timestamp_ok?
@@ -113,8 +58,16 @@ module SacPS
 
           # puts "Now is later than stamp: #{now_later_than_stamp}"
           # puts "Now is within 900s stamp: #{now_within_900_seconds_of_stamp}"
+          if now_later_than_stamp && now_within_900_seconds_of_stamp
+            return true
+          else
+            raise "RequestExpiredError"
+          end
+        end
 
-          return now_later_than_stamp && now_within_900_seconds_of_stamp
+        def request_type_ok?
+          raise "UnimplementedRequestError", "#{response[:request]} not implemented" unless IMPLEMENTED_RESPONSES.include? @response_hash["Request"]
+          return true
         end
 
         private

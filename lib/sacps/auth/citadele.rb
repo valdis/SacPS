@@ -2,7 +2,7 @@ module SacPS
   module Auth
     module Citadele
 
-      #require 'Nokogiri'
+      require 'Nokogiri'
       require 'xmldsig'
 
       mattr_accessor :service_url, :return_url, :identifier, :private_key, :private_cert, :public_key
