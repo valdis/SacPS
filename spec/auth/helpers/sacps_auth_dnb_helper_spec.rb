@@ -10,4 +10,9 @@ describe SacPS::Auth::Dnb::Helper do
   it "should create correct amount of fields" do
     expect(@helper.form_fields.size).to eq 7
   end
+
+  it "should output debug" do
+    puts @helper.form_fields
+    expect(@helper.form_fields.size).to eq 7
+  end
 end
