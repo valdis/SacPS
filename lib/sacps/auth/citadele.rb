@@ -54,7 +54,7 @@ module SacPS
       end
 
       def self.get_private_cert
-        SacPS::Auth::Citadele.private_cert.gsub(/[-]+BEGIN CERTIFICATE[-]+\n/, '').gsub(/\n[-]+END CERTIFICATE[-]+\n/, '').gsub("\n", '')
+        SacPS::Auth::Citadele.private_cert.gsub(/[-]{5}(BEGIN CERTIFICATE|END CERTIFICATE)[-]{5}/, '').gsub("\n", '')
       end
 
     end

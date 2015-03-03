@@ -34,7 +34,7 @@ module SacPS
                       <SignatureValue></SignatureValue>
                       <KeyInfo>
                         <X509Data>
-                          <X509Certificate>#{SacPS::Auth::Citadele.private_cert.gsub("\n",'')}</X509Certificate>
+                          <X509Certificate>#{SacPS::Auth::Citadele.get_private_cert}</X509Certificate>
                         </X509Data>
                       </KeyInfo>
                     </Signature>
