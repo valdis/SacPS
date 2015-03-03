@@ -3,8 +3,8 @@ module SacPS
     module Citadele
       class Notification
 
-        attr_reader :status, :xml, :message, :user_identifier, :user_name, :from, :uuid
-        attr_accessor :response_hash, :code
+        attr_reader :user_identifier, :user_name, :from, :uuid
+        attr_accessor :response_hash, :code, :xml, :message
 
         IMPLEMENTED_RESPONSES = ['ESERVICEREQ', 'AUTHRESP']
 
@@ -15,7 +15,6 @@ module SacPS
           @code = @response_hash["Code"]
           @message = @response_hash["Message"]
           @uuid = @response_hash["RequestUID"]
-          @status = self.valid?
 
           @user_identifier = @response_hash["PersonCode"].split("").insert(6,"-").join #=> "123456-12345"
           @user_name       = @response_hash["Person"].split(" ").rotate.join(" ") #=> "JĀNIS BĒRZIŅŠ"
@@ -27,7 +26,7 @@ module SacPS
         end
 
         def valid?
-          return code_ok? && request_type_ok? && timestamp_ok? && cert_ok?
+          return code_ok? && request_type_ok? && timestamp_ok? && signature_ok?
         end
 
         def code_ok?
@@ -37,11 +36,11 @@ module SacPS
           when '200'
             raise "AuthenticationCancelledError"
           when '300'
-            raise "ServiceError", @message
+            raise @message
           end
         end
 
-        def cert_ok?
+        def signature_ok?
           xmldsig = Xmldsig::SignedDocument.new(@xml)
           xmldsig.validate(SacPS::Auth::Citadele.get_public_key) ? true : (raise "InvalidXMLSignatureError")
         end
