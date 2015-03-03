@@ -21,6 +21,40 @@ module SacPS
           @from            = "CITADELE"
         end
 
+        def process_xml raw_xml
+          xmldsig = Xmldsig::SignedDocument.new(raw_xml)
+          valid = xmldsig.validate(provider_certificate)
+          raise InvalidXMLSignatureError unless valid
+
+          parser = Nori.new(:convert_tags_to => lambda { |tag| tag.snakecase.to_sym })
+          xml = parser.parse(raw_xml).try(:[], :fidavista)
+
+          ts = xml.try(:[], :header).try(:[], :timestamp)
+          time = Time.local(
+            ts[0..3].to_i,
+            ts[4..5].to_i,
+            ts[6..7].to_i,
+            ts[8..9].to_i,
+            ts[10..11].to_i,
+            ts[12..13].to_i,
+            ts[14..16].to_i
+          )
+
+          raise RequestExpiredError if time + 15.minutes < Time.now
+
+          response = xml.try(:[], :header).try(:[], :extension).try(:[], :amai)
+          raise UnimplementedRequestError, "#{response[:request]} not implemented" unless IMPLEMENTED_RESPONSES.include? response[:request]
+
+          case response[:code]
+          when '100'
+          when '200'
+            raise AuthenticationCancelledError
+          when '300'
+            raise ServiceError, response[:message]
+          end
+          response
+        end
+
         def user_information
           "#{@user_identifier};#{@user_name}"
         end
@@ -107,11 +141,6 @@ module SacPS
               "SignatureCert" => doc.xpath("//X509Certificate").text.strip
               }
           end
-
-          # def build_hashable_string
-          #   rh = @response_hash
-          #   return "#{rh["Timestamp"]}#{rh["From"]}#{rh["Request"]}#{rh["RequestUID"]}#{rh["Version"]}#{rh["Language"]}#{rh["PersonCode"]}#{rh["Person"]}#{rh["Code"]}#{rh["Message"]}"
-          # end
 
       end # -- Ends class
     end

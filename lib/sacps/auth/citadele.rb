@@ -54,6 +54,10 @@ module SacPS
         OpenSSL::PKey::RSA.new(SacPS::Auth::Citadele.private_key)
       end
 
+      def self.get_private_cert
+        SacPS::Auth::Citadele.private_cert.gsub(/[-]+BEGIN CERTIFICATE[-]+\n/, '').gsub(/\n[-]+END CERTIFICATE[-]+\n/, '').gsub("\n", '')
+      end
+
     end
   end
 end

@@ -18,6 +18,10 @@ describe SacPS::Auth::Citadele::Helper do
     expect(helper.present?).to eq true
   end
 
+  # it "should return correct identifier" do
+  #   expect(SacPS::Auth::Citadele.get_private_cert).to eq 1
+  # end
+
   it "should return correct identifier" do
     expect(helper.identifier).to eq ENV["CITADELE_IDENTIFIER"]
   end
