@@ -17,7 +17,6 @@ module SacPS
       require 'sacps/auth/citadele/helper'
       require 'sacps/auth/citadele/notification'
       require 'sacps/auth/citadele/helper_xml_builder'
-      require 'sacps/auth/citadele/helper_xml_builder2'
       require 'sacps/auth/citadele/notification_xml_builder'
 
       def self.validate_config!
