@@ -1,18 +1,17 @@
 module SacPS
   module Auth
     module Citadele
-
       require 'Nokogiri'
       require 'xmldsig'
 
       mattr_accessor :service_url, :return_url, :identifier, :private_key, :private_cert, :public_key
 
-      SacPS::Auth::Citadele.private_key = ENV["CITADELE_PRIVKEY"]
+      SacPS::Auth::Citadele.identifier   = ENV["CITADELE_IDENTIFIER"] # Your merchant number with Citadele
+      SacPS::Auth::Citadele.private_key  = ENV["CITADELE_PRIVKEY"]
       SacPS::Auth::Citadele.private_cert = ENV["CITADELE_PRIVATE_CERT"]
-      SacPS::Auth::Citadele.public_key  = ENV["CITADELE_PUBLIC_KEY"]
-      SacPS::Auth::Citadele.service_url = "https://online.citadele.lv/amai/start.htm"
-      SacPS::Auth::Citadele.return_url  = "https://your-domain.com/auth/citadele"
-      SacPS::Auth::Citadele.identifier  = ENV["CITADELE_IDENTIFIER"] # Your merchant number with Citadele
+      SacPS::Auth::Citadele.public_key   = ENV["CITADELE_PUBLIC_KEY"]
+      SacPS::Auth::Citadele.return_url   = "https://your-domain.com/auth/citadele"
+      SacPS::Auth::Citadele.service_url  = "https://online.citadele.lv/amai/start.htm"
 
       require 'sacps/auth/citadele/helper'
       require 'sacps/auth/citadele/notification'

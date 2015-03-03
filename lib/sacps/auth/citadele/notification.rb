@@ -72,19 +72,16 @@ module SacPS
             doc.remove_namespaces!
 
             return {
-              "Timestamp" => doc.xpath("//Timestamp").text,
+              "Timestamp" => doc.xpath("//Timestamp").text, # Verify
               "From" => doc.xpath("//From").text,
               "Request" => doc.xpath("//Request").text,
-              "RequestUID" => doc.xpath("//RequestUID").text,
+              "RequestUID" => doc.xpath("//RequestUID").text, # Verify
               "Version" => doc.xpath("//Version").text,
               "Language" => doc.xpath("//Language").text,
-              "PersonCode" => doc.xpath("//PersonCode").text,
-              "Person" => doc.xpath("//Person").text,
-              "Code" => doc.xpath("//Code").text, # Important
-              "Message" => doc.xpath("//Message").text,
-              "DigestValue" => doc.xpath("//DigestValue").text,
-              "SignatureValue" => doc.xpath("//SignatureValue").text.strip,
-              "SignatureCert" => doc.xpath("//X509Certificate").text.strip
+              "PersonCode" => doc.xpath("//PersonCode").text, # Use
+              "Person" => doc.xpath("//Person").text, # Use
+              "Code" => doc.xpath("//Code").text, # Verify
+              "Message" => doc.xpath("//Message").text
               }
           end
 

@@ -48,8 +48,7 @@ module SacPS
           unsigned_xml.gsub!("\n", '')
           unsigned_document = Xmldsig::SignedDocument.new(unsigned_xml)
           signed_xml = unsigned_document.sign(SacPS::Auth::Citadele.get_private_key)
-          # normalize return for hidden input value
-          return signed_xml#.gsub('&','&amp;').gsub('"','&quot;')
+          return signed_xml
         end
 
       end
