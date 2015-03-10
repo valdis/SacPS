@@ -1,3 +1,43 @@
+### Swedbank usage
+
+#### Configure defaults
+#### Initialize the helper
+#### Expect a response at the return_url you specified
+##### Instantiate a notification object
+```ruby
+# GET version
+received_params = request.url.split("?").last
+@response = Banklink::Swedbank.notification received_params
+# POST version
+received_params = request.raw_post
+@response = Banklink::Swedbank.notification received_params
+
+@response.inspect #=>
+"#<Banklink::Swedbank::Notification:0x007fafb6ad9e28
+@options={},
+@params={
+  "VK_SERVICE"=>"1101"
+  "VK_VERSION"=>"008"
+  "VK_SND_ID"=>"HP"
+  "VK_REC_ID"=>"REFEREND"
+  "VK_STAMP"=>"1"
+  "VK_T_NO"=>"169"
+  "VK_AMOUNT"=>"0.01"
+  "VK_CURR"=>"EUR"
+  "VK_REC_ACC"=>"XXXXXXXXXX"
+  "VK_REC_NAME"=>"FONDS"
+  "VK_SND_ACC"=>"XXXXXXXXXXXX"
+  "VK_SND_NAME"=>"JOHNNY BRAVO"
+  "VK_REF"=>""
+  "VK_MSG"=>"Manabalss ziedojums par €0.01 | UniqID: 455"
+  "VK_T_DATE"=>"10.03.2015"
+  "VK_LANG"=>"LAT"
+  "VK_AUTO"=>"N"
+  "VK_ENCODING"=>"UTF-8"
+  "VK_MAC"=>"ObqLDaCTNOdFueilODycvjz3e1oExPaj8XMzYf1pc0FrYoCvxoqSNy4d/9aCLdbMYL2hecdLxY/T+cTCNty3LBbcjxQPyJeo7bhQ0MKaNEL38PvZKnVc0GCK1kSeXSenJVCgTKh//YfnuDcziwyR1t5PnwLvQP6Qlx7AbGPOe6A="},
+@raw="VK_SERVICE=1101&VK_VERSION=008&VK_SND_ID=HP&VK_REC_ID=REFEREND&VK_STAMP=1....QP6Qlx7AbGPOe6A%3D">"
+```
+
 ### Citadele usage
 
 #### Add secret environmental variables (nano /etc/environment)
