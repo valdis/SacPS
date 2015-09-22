@@ -1,24 +1,26 @@
 module SacPS
   module Auth
     module Citadele
-      #require 'nokogiri'
       require 'xmldsig'
 
       mattr_accessor :service_url, :return_url, :identifier, :private_key, :private_cert, :public_key
-
-      SacPS::Auth::Citadele.identifier   = ENV["CITADELE_IDENTIFIER"] # Your merchant number with Citadele
-      SacPS::Auth::Citadele.private_key  = ENV["CITADELE_PRIVKEY"]
-      SacPS::Auth::Citadele.private_cert = ENV["CITADELE_PRIVATE_CERT"]
-      SacPS::Auth::Citadele.public_key   = ENV["CITADELE_PUBLIC_KEY"]
-      SacPS::Auth::Citadele.return_url   = "https://your-domain.com/auth/citadele"
-      SacPS::Auth::Citadele.service_url  = "https://online.citadele.lv/amai/start.htm"
 
       require 'sacps/auth/citadele/helper'
       require 'sacps/auth/citadele/notification'
       require 'sacps/auth/citadele/helper_xml_builder'
       require 'sacps/auth/citadele/notification_xml_builder'
 
+      def self.set_default_values
+        SacPS::Auth::Citadele.identifier   ||= ENV["CITADELE_IDENTIFIER"] # Your merchant number with Citadele
+        SacPS::Auth::Citadele.private_key  ||= ENV["CITADELE_PRIVKEY"]
+        SacPS::Auth::Citadele.private_cert ||= ENV["CITADELE_PRIVATE_CERT"]
+        SacPS::Auth::Citadele.public_key   ||= ENV["CITADELE_PUBLIC_KEY"] || File.read("#{SacPS.root}/lib/sacps/auth/citadele/public_key")
+        SacPS::Auth::Citadele.return_url   ||= "https://your-domain.com/auth/citadele"
+        SacPS::Auth::Citadele.service_url  ||= "https://online.citadele.lv/amai/start.htm"
+      end
+
       def self.validate_config!
+        self.set_default_values
         message = []
         if SacPS::Auth::Citadele.private_key.blank?
           message << "No Private Key!"
@@ -45,7 +47,7 @@ module SacPS
       end
 
       def self.get_public_key
-        OpenSSL::X509::Certificate.new(SacPS::Auth::Citadele.public_key)
+        OpenSSL::X509::Certificate.new(SacPS::Auth::Citadele.public_key)        
       end
 
       def self.get_private_key
@@ -53,7 +55,7 @@ module SacPS
       end
 
       def self.get_private_cert
-        SacPS::Auth::Citadele.private_cert.gsub(/[-]{5}(BEGIN CERTIFICATE|END CERTIFICATE)[-]{5}/, '').gsub("\n", '')
+        SacPS::Auth::Citadele.private_cert.strip_crypto_wrappers.gsub("\n", '')
       end
 
     end

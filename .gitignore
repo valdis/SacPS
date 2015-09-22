@@ -2,3 +2,4 @@
 .DS_Store
 example*.xml
 .env
+/secret

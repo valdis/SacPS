@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.summary = "Sacristan Payment Systems"
   s.require_path = "lib"
   s.has_rdoc = false
-  s.extra_rdoc_files = ["README.rdoc"]
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -24,6 +23,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec"
   s.add_development_dependency "priscilla"
   s.add_development_dependency "dotenv"
+  s.add_development_dependency "timecop"
+  s.add_development_dependency "pry"
 
   s.add_dependency 'activesupport'
   s.add_dependency "builder", '>= 2.0'

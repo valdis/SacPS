@@ -4,12 +4,17 @@ require 'spec_helper'
 
 describe SacPS::Auth::Citadele::Notification do
   before :each do
+    @time = Time.use_zone('Riga'){ Time.zone.parse("2015-06-01 2pm") }
+    Timecop.freeze(@time)
+
     @valid_notification = SacPS::Auth::Citadele.notification SacPS::Auth::Citadele::Notification.test_response.strip
     now = (Time.now - 60.seconds).strftime("%Y%m%d%H%M%S%3N")
     @valid_notification.response_hash["Timestamp"] = now
   end
 
-  #SacPS::Auth::Citadele.return_url = "http://lvh.me:3000/auth/citadele"
+  it "should be frozen at the correct time" do
+    expect(Time.now).to eq "2015-06-01 14:00:00 +0300".to_datetime
+  end
 
   it "should return correct verification status" do
     expect(@valid_notification.valid?).to eq true
@@ -54,6 +59,7 @@ describe SacPS::Auth::Citadele::Notification do
 
   describe "Signature" do
     it "should TRUE if signature is ok" do
+      #binding.pry
       expect(@valid_notification.signature_ok?).to eq true
     end
     it "should throw an error if response xml is fed backwards" do
@@ -92,6 +98,12 @@ describe SacPS::Auth::Citadele::Notification do
 
   describe "Timestamp" do
     it "should TRUE timestamp if within 15 minutes" do
+      now = (Time.now - 1.second).strftime("%Y%m%d%H%M%S")
+      @valid_notification.response_hash["Timestamp"] = now
+      expect(@valid_notification.timestamp_ok?).to eq true
+
+      now = (Time.now - 899.seconds).strftime("%Y%m%d%H%M%S")
+      @valid_notification.response_hash["Timestamp"] = now
       expect(@valid_notification.timestamp_ok?).to eq true
     end
     it "should raise error if stamp is newer than now" do
@@ -100,7 +112,7 @@ describe SacPS::Auth::Citadele::Notification do
       expect { @valid_notification.timestamp_ok? }.to raise_error(/RequestExpiredError/)
     end
     it "should raise error if stamp is older than 900s" do
-      now = (Time.now - 900.seconds).strftime("%Y%m%d%H%M%S%3N")
+      now = (Time.now - 900.seconds).strftime("%Y%m%d%H%M%S")
       @valid_notification.response_hash["Timestamp"] = now
       expect { @valid_notification.timestamp_ok? }.to raise_error(/RequestExpiredError/)
     end
