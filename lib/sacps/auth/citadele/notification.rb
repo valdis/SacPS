@@ -48,7 +48,7 @@ module SacPS
         def timestamp_ok?
           stamp = response_hash["Timestamp"]; stamp_i = stamp.to_datetime.to_i
           now   = Time.now.strftime("%Y%m%d%H%M%S"); now_i = now.to_datetime.to_i
-          now_later_than_stamp = (now_i - stamp_i) > -10 # this was originally 0, but recent requests return -2, meaning response is very quick
+          now_later_than_stamp = (now_i - stamp_i) > (-10) # this was originally 0, but recent requests return -2, meaning response is very quick
           now_within_900_seconds_of_stamp = (now_i - stamp_i) < 900
 
           if now_later_than_stamp && now_within_900_seconds_of_stamp
