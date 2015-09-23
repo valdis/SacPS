@@ -54,7 +54,7 @@ module SacPS
           if now_later_than_stamp && now_within_900_seconds_of_stamp
             return true
           else
-            raise "RequestExpiredError"
+            raise "RequestExpiredError\nRequest stamp: #{stamp}\nNow stamp: #{now}\nDifference: #{now_i - stamp_i}"
           end
         end
 
