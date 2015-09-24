@@ -8,6 +8,29 @@ Start by creating .env file in root and defining some environmental variables.
 
 When ready, do `rspec` to run the test suite.
 
+## Standarts
+Authentification system functionalities are packed in two namespaces - `helper` and `notification`
+
+#### Helper
+Does everything leading up to sending the request to remote service.  
+Usually this means request url and data setup
+
+#### Notification
+Does everything after receiving response from remote service.  
+Usually there is a create controller action where notification object is instatiated:
+
+```ruby
+notification = SacPS::Auth::<AuthSystem>.notification(params[:some_param])
+create_and_or_login_user notification
+```
+
+Notification object _must_ define `user_identifier` and `user_name` as a minimum.  
+
+```ruby
+notification.user_identifier #=> "311299-11111"
+notification.user_name       #=> "Askolds Buksis"
+```
+
 ### Swedbank usage
 
 1. Configure defaults
@@ -126,3 +149,17 @@ if @response.valid?
   @response.message         #=> Only present if code !"100"
   @response.uuid            #=> "7387bf5b-fa27-4fdd-add6-a6bfb2599f77" (the same you supplied)
 ```
+
+### DraugiemID usage
+
+Make a draugiem.lv [developer app](https://www.draugiem.lv/applications/dev/myapps/)  
+Place configuration in an ini file  
+
+```ruby
+SacPS::Auth::DraugiemId.app_id = '15019482' # developer app id
+SacPS::Auth::DraugiemId.app_key = 'a84e9ab56ab161f1dbe323c457c8c87a' #developer app key
+SacPS::Auth::DraugiemId.return_url = 'http://example.com/draugiem_auth/' # the return url in your app where DraugiemId will respond to
+```
+
+#### Development
+Documentation is online at [Draugiem site](https://www.draugiem.lv/applications/dev/docs/draugiemid)
