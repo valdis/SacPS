@@ -17,6 +17,18 @@ describe SacPS::Auth::DraugiemId::Notification do
     end
   end
 
+  describe "#authorize!" do
+    it "raises error if called without dr_auth_code" do
+      expect {notification.authorize!}.to raise_error RuntimeError
+    end
+  end
+
+  describe "#request_user_data!" do
+    it "raises error if called without authorizing first" do
+      expect {notification.request_user_data!}.to raise_error RuntimeError
+    end
+  end
+
   describe "#parse_user_data!" do
     let(:hash) { {
       "users" => {
@@ -39,7 +51,7 @@ describe SacPS::Auth::DraugiemId::Notification do
     } }
 
     it "sets @user_identifier correctly" do
-      notification.user_data_response = hash      
+      notification.user_data_response = hash
       notification.parse_user_data!
       expect(notification.user_identifier ).to eq "123456-12345"
     end

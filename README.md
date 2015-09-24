@@ -163,3 +163,6 @@ SacPS::Auth::DraugiemId.return_url = 'http://example.com/draugiem_auth/' # the r
 
 #### Development
 Documentation is online at [Draugiem site](https://www.draugiem.lv/applications/dev/docs/draugiemid)
+
+Specs for most part can only account for internal preperatory logic.  
+Impossible to spec production requests due to auth.

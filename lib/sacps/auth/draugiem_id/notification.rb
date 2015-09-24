@@ -22,20 +22,22 @@ module SacPS
         def authorize!
           uri = SacPS::Auth::DraugiemId.api_url
           params = {params: {action: "authorize", app: SacPS::Auth::DraugiemId.app_key, code: @dr_auth_code} }
-          response = RestClient.get(uri, params).to_json
-          pr response
+          response = RestClient.get(uri, params)
+          response = JSON.parse(response)
           raise %Q|SacPS::Auth::DraugiemId\n#{response["error"]}| if response["error"].present?
           @auth_response = response
           @user_apikey = @auth_response["apikey"]
+          return response
         end
 
         def request_user_data!
           uri = SacPS::Auth::DraugiemId.api_url
           params = {params: {action: "userdata", app: SacPS::Auth::DraugiemId.app_key, apikey: @user_apikey} }
-          response = RestClient.get(uri, params).to_json
-          pr response
+          response = RestClient.get(uri, params)
+          response = JSON.parse(response)
           raise %Q|SacPS::Auth::DraugiemId\n#{response["error"]}| if response["error"].present?
           @user_data_response = response
+          return response
         end
 
         def parse_user_data!
