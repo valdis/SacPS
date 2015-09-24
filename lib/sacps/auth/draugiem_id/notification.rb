@@ -21,8 +21,8 @@ module SacPS
 
         def authorize!
           uri = SacPS::Auth::DraugiemId.api_url
-          params = {action: "authorize", app: SacPS::Auth::DraugiemId.app_key, code: @dr_auth_code}
-          response = RestClient.post(uri, params)
+          params = {params: {action: "authorize", app: SacPS::Auth::DraugiemId.app_key, code: @dr_auth_code} }
+          response = RestClient.get(uri, params)
           raise %Q|SacPS::Auth::DraugiemId\n#{response["error"]}| if response["error"].present?
           @auth_response = response
           @user_apikey = @auth_response["apikey"]
@@ -30,8 +30,8 @@ module SacPS
 
         def request_user_data!
           uri = SacPS::Auth::DraugiemId.api_url
-          params = {action: "userdata", app: SacPS::Auth::DraugiemId.app_key, apikey: @user_apikey}
-          response = RestClient.post(uri, params)
+          params = {params: {action: "userdata", app: SacPS::Auth::DraugiemId.app_key, apikey: @user_apikey} }
+          response = RestClient.get(uri, params)
           raise %Q|SacPS::Auth::DraugiemId\n#{response["error"]}| if response["error"].present?
           @user_data_response = response
         end
