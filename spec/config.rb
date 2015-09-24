@@ -1,3 +1,6 @@
+SacPS::Auth::DraugiemId.app_id = '7c437d28be62b492151788f6c827afd6'
+SacPS::Auth::DraugiemId.return_url = 'http://example.com/draugiem_auth/'
+
 SacPS::Auth::Swedbank.identifier = 'ACC1'
 SacPS::Auth::Swedbank.service_url = 'https://ib.swedbank.lv'
 SacPS::Auth::Swedbank.return_url = 'http://www.myplace.com'

@@ -126,3 +126,7 @@ if @response.valid?
   @response.message         #=> Only present if code !"100"
   @response.uuid            #=> "7387bf5b-fa27-4fdd-add6-a6bfb2599f77" (the same you supplied)
 ```
+
+### DraugiemID usage
+
+Documentation is online at [Draugiem site](https://www.draugiem.lv/applications/dev/docs/draugiemid)
