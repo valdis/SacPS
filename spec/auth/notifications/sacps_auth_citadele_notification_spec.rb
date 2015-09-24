@@ -98,7 +98,7 @@ describe SacPS::Auth::Citadele::Notification do
 
   describe "Timestamp" do
     it "should TRUE timestamp if within 15 minutes" do
-      now = (Time.now + 5.seconds).strftime("%Y%m%d%H%M%S")
+      now = (Time.now + 26.seconds).strftime("%Y%m%d%H%M%S")
       @valid_notification.response_hash["Timestamp"] = now
       expect(@valid_notification.timestamp_ok?).to eq true
 
@@ -112,7 +112,7 @@ describe SacPS::Auth::Citadele::Notification do
       expect { @valid_notification.timestamp_ok? }.to raise_error(/RequestExpiredError/)
     end
     it "should raise error if stamp is older than 900s" do
-      now = (Time.now - 900.seconds).strftime("%Y%m%d%H%M%S")
+      now = (Time.now - 901.seconds).strftime("%Y%m%d%H%M%S")
       @valid_notification.response_hash["Timestamp"] = now
       expect { @valid_notification.timestamp_ok? }.to raise_error(/RequestExpiredError/)
     end
