@@ -24,6 +24,10 @@ module SacPS
         Helper.new
       end
 
+      def self.notification(dr_auth_code)
+        Notification.perform_complete_stack!(dr_auth_code)
+      end
+
     end
   end
 end

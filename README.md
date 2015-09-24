@@ -152,4 +152,14 @@ if @response.valid?
 
 ### DraugiemID usage
 
+Make a draugiem.lv [developer app](https://www.draugiem.lv/applications/dev/myapps/)  
+Place configuration in an ini file  
+
+```ruby
+SacPS::Auth::DraugiemId.app_id = '15019482' # developer app id
+SacPS::Auth::DraugiemId.app_key = 'a84e9ab56ab161f1dbe323c457c8c87a' #developer app key
+SacPS::Auth::DraugiemId.return_url = 'http://example.com/draugiem_auth/' # the return url in your app where DraugiemId will respond to
+```
+
+#### Development
 Documentation is online at [Draugiem site](https://www.draugiem.lv/applications/dev/docs/draugiemid)

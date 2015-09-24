@@ -12,7 +12,7 @@ class String
     gsub(/\n/,'').gsub(/\>\s+\</, '><')
   end
 
-  def strip_crypto_wrappers    
+  def strip_crypto_wrappers
     gsub(/[-]{5}(BEGIN|END).*?[-]{5}/, '').strip
   end
 end
@@ -42,6 +42,7 @@ require "active_support/core_ext"
 require 'net/http'
 require 'net/https'
 require 'uri'
+require 'rest-client'
 
 require 'digest'
 require 'digest/md5'
