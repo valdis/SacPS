@@ -9,6 +9,7 @@ describe SacPS::Auth::DraugiemId::Helper do
 
   describe "initialization" do
     it "should have @authentication_url" do
+      # pr @helper.authentication_url
       expect(@helper.authentication_url.present?).to eq true
     end
   end

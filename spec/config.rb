@@ -1,4 +1,5 @@
-SacPS::Auth::DraugiemId.app_id = '7c437d28be62b492151788f6c827afd6'
+SacPS::Auth::DraugiemId.app_id = '15019482'
+SacPS::Auth::DraugiemId.app_key = 'a84e9ab56ab161f1dbe323c457c8c87a'
 SacPS::Auth::DraugiemId.return_url = 'http://example.com/draugiem_auth/'
 
 SacPS::Auth::Swedbank.identifier = 'ACC1'

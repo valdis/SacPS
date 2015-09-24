@@ -17,7 +17,7 @@ module SacPS
         end
 
         def build_control_code
-          Digest::MD5.hexdigest("#{SacPS::Auth::DraugiemId.app_id}#{SacPS::Auth::DraugiemId.return_url}")
+          Digest::MD5.hexdigest("#{SacPS::Auth::DraugiemId.app_key}#{SacPS::Auth::DraugiemId.return_url}")
         end
 
       end
