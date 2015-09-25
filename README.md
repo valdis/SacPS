@@ -152,13 +152,42 @@ if @response.valid?
 
 ### DraugiemID usage
 
-Make a draugiem.lv [developer app](https://www.draugiem.lv/applications/dev/myapps/)  
+Make a draugiem.lv [developer app](https://www.draugiem.lv/applications/dev/myapps/)
+Make sure the app has 16x16 icon image and gets published (fill out application form) 
 Place configuration in an ini file  
 
 ```ruby
 SacPS::Auth::DraugiemId.app_id = '15019482' # developer app id
 SacPS::Auth::DraugiemId.app_key = 'a84e9ab56ab161f1dbe323c457c8c87a' #developer app key
 SacPS::Auth::DraugiemId.return_url = 'http://example.com/draugiem_auth/' # the return url in your app where DraugiemId will respond to
+```
+
+In your controller new action
+
+```ruby
+@helper = SacPS::Auth::DraugiemId.helper
+redirect_to @helper.authentication_url
+```
+
+In the GET receiving response awaiting action
+
+```ruby
+if params[:dr_auth_status] == "failed"
+  render text: "Autentifikācija ar DraugiemID neizdevās, jo noraidījāt tās lietošanu."
+elsif params[:dr_auth_status] == "ok"
+  if params[:dr_auth_code].present?
+    notification = SacPS::Auth::DraugiemId.notification(params[:dr_auth_code])
+  end
+end
+```
+
+If the notification detects that the user has not verified their draugiem.lv account and has no identity number,  
+an error will be raised that you can rescue in application controller
+
+```ruby
+rescue_from SacPS::Auth::DraugiemId::NotificationError do
+  # redirect_to some "We're sorry, you must verify your account" view  
+end
 ```
 
 #### Development

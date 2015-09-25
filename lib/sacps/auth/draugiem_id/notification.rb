@@ -25,8 +25,7 @@ module SacPS
           response = JSON.parse(response)
           raise %Q|SacPS::Auth::DraugiemId::Notification\n#{response["error"]}| if response["error"].present?
           @auth_response = response
-          return response
-          # @auth_response={"apikey"=>"893622a604f3afe374307e88c8a085c1", "uid"=>"5336961", "language"=>"lv", "users"=>{"5336961"=>{"uid"=>5336961, "name"=>"Augusts", "url"=>"/user/5336961/", "surname"=>"Bautra", "nick"=>"", "emailHash"=>"2ca63b0c1c9d2c91e200ac5b26b28bd1", "place"=>"", "img"=>false, "imgi"=>false, "imgm"=>false, "imgl"=>false, "sex"=>"M", "birthday"=>"1988-11-26", "age"=>26, "adult"=>1, "type"=>"User_Default", "deleted"=>false, "created"=>"24.09.2015 12:28:27", "pk"=>""}}}
+          return response          
         end
 
         def parse_user_data!
