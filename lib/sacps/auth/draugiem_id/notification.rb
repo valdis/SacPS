@@ -8,9 +8,13 @@ module SacPS
 
         def self.perform_complete_stack!(dr_auth_code)
           notification = self.new(dr_auth_code)
+          pr "\n----> Initialized this notification\n#{notification.inspect}\n"
           notification.authorize!
+          pr "\n----> Authorized this notification\n#{notification.inspect}\n"
           notification.request_user_data!
+          pr "\n----> Requested user data on this notification\n#{notification.inspect}\n"
           notification.parse_user_data!
+          pr "\n----> Parsed this notification\n#{notification.inspect}\n"
           return notification
         end
 
