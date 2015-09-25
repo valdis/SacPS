@@ -23,41 +23,20 @@ describe SacPS::Auth::DraugiemId::Notification do
     end
   end
 
-  describe "#request_user_data!" do
-    it "raises error if called without authorizing first" do
-      expect {notification.request_user_data!}.to raise_error RuntimeError
-    end
-  end
-
   describe "#parse_user_data!" do
-    let(:hash) { {
-      "users" => {
-        "3342174" => {
-          "uid" => 3342174,
-          "name" => "J\u0101nis",
-          "surname" => "B\u0113rzi\u0146\u0161",
-          "url" => "\/beerzinjanis\/",
-          "emailHash" => "a21e7e99b3c11a755e7835901c2ec0c2",
-          "place" => "R\u012bga",
-          "nick" => "Janka",
-          "age" => 21,
-          "adult" => 1,
-          "sex"=>"M",
-          "created"=>"01.01.2005 11:32:55",
-          "deleted"=>false,
-          "pk"=>"123456-12345"
-        }
-      }
-    } }
+    it "should raise specific runtime error" do
+      notification.auth_response = TEST::AUTH_RESPONSE_WITHOUT_PK
+      expect{ notification.parse_user_data! }.to raise_error(SacPS::Auth::DraugiemId::NotificationError, /pk_missing/)
+    end
 
     it "sets @user_identifier correctly" do
-      notification.user_data_response = hash
+      notification.auth_response = TEST::AUTH_RESPONSE_WITH_PK
       notification.parse_user_data!
       expect(notification.user_identifier ).to eq "123456-12345"
     end
 
     it "sets @user_name correctly" do
-      notification.user_data_response = hash
+      notification.auth_response = TEST::AUTH_RESPONSE_WITH_PK
       notification.parse_user_data!
       expect(notification.user_name ).to eq "Jānis Bērziņš"
     end

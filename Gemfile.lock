@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sacps (0.0.6)
+    sacps (0.0.10)
       activesupport
       builder (>= 2.0)
       nokogiri
