@@ -21,7 +21,6 @@ module SacPS
           val = sigparams[param].to_s # nil goes to ''
           str << func_p(val) << val
         end
-        #binding.pry
         str
       end
 

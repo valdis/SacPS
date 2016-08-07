@@ -54,7 +54,11 @@ module SacPS
           end
 
           def signature
-            Base64.decode64(params['VK_MAC'])
+            # if the generated signature after conversion to base64 includes '+'
+            # then in SacPS::Auth::Common.parse they are replaced with ' ' by
+            # CGI.unescape therefore we put the + back in the base64 encoded
+            # signature
+            Base64.decode64(params['VK_MAC'].gsub(' ','+'))
           end
 
           def bank_signature_valid? service_msg_number, sigparams

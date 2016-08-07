@@ -28,8 +28,13 @@ module Mock
           @fields['VK_MAC'] = generate_mac(@fields['VK_SERVICE'], @fields, SacPS::Auth::Swedbank.required_service_params)
         end
 
-        def generate_raw_response
-          values = @fields.collect{|key, value| "#{key}=#{value}"}.join('&')
+        def invalidate_field(field_name)
+          @fields[field_name] += "INVALID"
+          self
+        end
+
+        def build_raw_response
+          @fields.collect{|key, value| "#{key}=#{value}"}.join('&')
         end
       end
     end

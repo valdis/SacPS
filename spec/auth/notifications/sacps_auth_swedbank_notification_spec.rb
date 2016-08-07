@@ -5,22 +5,38 @@ require 'spec_helper'
 describe SacPS::Auth::Swedbank::Notification do
   context "validation" do
     before :all do
-      Mock::Auth::Swedbank.public_key = File.read(File.expand_path("spec/example_files/swedbank_test_cert.pem"))
-      Mock::Auth::Swedbank.private_key = File.read(File.expand_path("spec/example_files/swedbank_test_key.pem"))
-      valid_http_raw_data = Mock::Auth::Swedbank::NotificationGenerator.new.generate_raw_response
-      invalid_http_raw_data = "VK_SERVICE=3003&VK_VERSION=008&VK_SND_ID=HP&VK_REC_ID=REFEREND&VK_NONCE=63244166086213189956175700685245263586579875921384&VK_INFO=ISIK:123456-10312;NIMI:MĀRIS CUKURS&VK_ENCODING=UTF-8&VK_MAC=S+Gt91E1I9WEL/qIWOgOUJB0h4WDeBHrfETqC4UG9Xe58YOP30iIRoMJOlBSHvfswVWEuSwCbBVsWIQt7tqHsY1IbidEsJ2ffdkCgofO9qPDBTuS9CI3bbPhK3gMtxkFs5BzxmXEu4bJHvuVJF40g4HyFZe3ozrUem2BHQS6u0Y="
+      Mock::Auth::Swedbank.public_key = File.read(File.expand_path("spec/example_files/mock_swedbank_server_cert.pem"))
+      Mock::Auth::Swedbank.private_key = File.read(File.expand_path("spec/example_files/mock_swedbank_server_key.pem"))
+      valid_http_raw_data = Mock::Auth::Swedbank::NotificationGenerator.new.build_raw_response
+      invalid_http_raw_data = Mock::Auth::Swedbank::NotificationGenerator.new.invalidate_field('VK_NONCE').build_raw_response
 
-      SacPS::Auth::Swedbank.bank_public_key = File.read(File.expand_path("spec/example_files/swedbank_test_cert.pem"))
-      @invalid_http_raw_data = SacPS::Auth::Swedbank.notification invalid_http_raw_data
+      SacPS::Auth::Swedbank.bank_public_key = File.read(File.expand_path("spec/example_files/mock_swedbank_server_cert.pem"))
       @valid_notification = SacPS::Auth::Swedbank.notification valid_http_raw_data
+      @invalid_notification = SacPS::Auth::Swedbank.notification invalid_http_raw_data
+    end
+
+    it "should use a valid key pair for encryption and decryption" do
+      plaintext_mock_swedbank_server_cert = File.read(File.expand_path("spec/example_files/mock_swedbank_server_cert.pem"))
+      plaintext_mock_swedbank_server_key = File.read(File.expand_path("spec/example_files/mock_swedbank_server_key.pem"))
+      message = "i am message"
+      mock_swedbank_server_public_key = OpenSSL::X509::Certificate.new(plaintext_mock_swedbank_server_cert.gsub(/  /, '')).public_key
+      mock_swedbank_server_private_key = OpenSSL::PKey::RSA.new(plaintext_mock_swedbank_server_key.gsub(/  /, ''))
+      digest = OpenSSL::Digest::SHA1.new
+
+      #sign
+      signature = mock_swedbank_server_private_key.sign(digest, message)
+      #verify signature
+      is_valid = mock_swedbank_server_public_key.verify(digest, signature, message)
+
+      expect(is_valid).to eq true
     end
 
     it "valid? should return true form_fields are authentic" do
       expect(@valid_notification.valid?).to eq true
     end
 
-    xit "valid? should return false if any of fields arent authentic" do
-      expect(@valid_notification.valid?).to eq false
+    it "valid? should return false if any of fields arent authentic" do
+      expect(@invalid_notification.valid?).to eq false
     end
   end
 
@@ -51,7 +67,7 @@ describe SacPS::Auth::Swedbank::Notification do
 
   # swedbank responds to our authentication request with an encrypted notification,
   # that is encrypted the same way our authentication request is.
-  # To test this we pretend to be the bank and use a self key pair to sign
+  # To test this we pretend to be the bank and use a self generated key pair to sign
   # and verify the notification
   # the keys used for test purpases are in spec/expample_files and can be generated
   # by calling
@@ -62,4 +78,5 @@ describe SacPS::Auth::Swedbank::Notification do
     requried_service_params =
     SacPS::Auth::Banklink.generate_signature(service_msg_number, sigparams, required_service_params)
   end
+
 end
