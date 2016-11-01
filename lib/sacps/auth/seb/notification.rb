@@ -42,7 +42,7 @@ module SacPS
         end
 
         def valid?
-          bank_signature_valid?('0005', params)
+          bank_signature_valid?('0001', params)
         end
 
         private

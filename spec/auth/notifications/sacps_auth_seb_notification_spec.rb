@@ -51,7 +51,7 @@ describe SacPS::Auth::Seb::Notification do
   end
 
   def required_fields
-    SacPS::Auth::Seb.required_service_params['0005']
+    SacPS::Auth::Seb.required_service_params['0001']
   end
 
 

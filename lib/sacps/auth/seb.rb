@@ -21,6 +21,16 @@ module SacPS
       end
 
       self.required_service_params = {
+        '0001' => [
+          'IB_SND_ID',
+          'IB_SERVICE',
+          'IB_REC_ID',
+          'IB_USER',
+          'IB_DATE',
+          'IB_TIME',
+          'IB_USER_INFO',
+          'IB_VERSION',
+        ],
         '0005' => [
           'IB_SND_ID',
           'IB_SERVICE',
