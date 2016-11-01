@@ -8,6 +8,9 @@ module SacPS
       mattr_accessor :identifier
       mattr_accessor :service_url
       mattr_accessor :required_service_params
+      mattr_accessor :public_key
+      mattr_accessor :private_key
+      mattr_accessor :bank_public_key
 
       def self.notification post
         Notification.new post
@@ -24,6 +27,21 @@ module SacPS
           'IB_LANG',
         ],
       }
+
+      def self.get_public_key
+        cert = self.public_key
+        OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
+      end
+
+      def self.get_private_key
+        private_key = self.private_key
+        OpenSSL::PKey::RSA.new(private_key.gsub(/  /, ''))
+      end
+
+      def self.get_bank_public_key
+        cert = self.bank_public_key
+        OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
+      end
 
     end
   end

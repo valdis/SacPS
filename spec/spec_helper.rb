@@ -14,6 +14,9 @@ RSpec.configure do |config|
   require "config"
 end
 
+# Load support files
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
 class TEST
   AUTH_RESPONSE_WITHOUT_PK = {
     "apikey"=>"893622a604f3afe374307e88c8a085c1", "uid"=>"5336961", "language"=>"lv", "users"=> {
