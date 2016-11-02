@@ -17,6 +17,10 @@ class TestCrypt
     enc_mac
   end
 
+  def generate_signature_param(params, required_fields)
+    CGI.escape(calc_mac_signature(params, required_fields))
+  end
+
   class << self
     def to_params(valid_http_raw_data)
       params_array = valid_http_raw_data.split('&').map{|i| i.split('=', 2)}
