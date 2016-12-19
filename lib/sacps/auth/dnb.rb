@@ -11,6 +11,7 @@ module SacPS
       mattr_accessor :service_url
       mattr_accessor :return_url
       mattr_accessor :required_service_params
+      mattr_accessor :bank_public_key
 
       def self.get_public_key
         cert = self.public_key
@@ -20,6 +21,11 @@ module SacPS
       def self.get_private_key
         private_key = self.private_key
         OpenSSL::PKey::RSA.new(private_key.gsub(/  /, ''))
+      end
+
+      def self.get_bank_public_key
+        cert = self.bank_public_key
+        OpenSSL::X509::Certificate.new(cert.gsub(/  /, '')).public_key
       end
 
       def self.notification post
@@ -48,8 +54,9 @@ module SacPS
           'VK_PER_CODE',
           'VK_PER_FNAME',
           'VK_PER_LNAME',
+          'VK_COM_CODE',
+          'VK_COM_NAME',
           'VK_TIME',
-          'VK_LANG'
         ]
       }
 

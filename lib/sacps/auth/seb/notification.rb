@@ -2,8 +2,8 @@ module SacPS
   module Auth
     module Seb
       class Notification
-        include SacPS::Auth::Common 
-        
+        include SacPS::Auth::Common
+
         attr_accessor :params
         attr_accessor :raw
 
@@ -42,14 +42,26 @@ module SacPS
         end
 
         def valid?
-          true
+          bank_signature_valid?('0001', params)
         end
 
         private
-          def emptify!
-            @params  = Hash.new
-            @raw     = ""
-          end
+
+        def emptify!
+          @params  = Hash.new
+          @raw     = ""
+        end
+
+        def signature
+          Base64.decode64(params['IB_CRC'])
+        end
+
+        def bank_signature_valid? service_msg_number, sigparams
+          digest = OpenSSL::Digest::SHA1.new
+          data_string = generate_data_string(service_msg_number, sigparams, SacPS::Auth::Seb.required_service_params)
+          SacPS::Auth::Seb.get_bank_public_key.verify digest, signature, data_string
+        end
+
       end
     end
   end
