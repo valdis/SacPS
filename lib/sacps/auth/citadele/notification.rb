@@ -46,15 +46,17 @@ module SacPS
         end
 
         def timestamp_ok?
-          stamp = response_hash["Timestamp"]; stamp_i = stamp.to_datetime.to_i
-          now   = Time.now.strftime("%Y%m%d%H%M%S"); now_i = now.to_datetime.to_i
+          #Too ofthen the timestamps do not match for valid requests, so we disable this check
+          return true
+          #stamp = response_hash["Timestamp"]; stamp_i = stamp.to_datetime.to_i
+          #now   = Time.now.strftime("%Y%m%d%H%M%S"); now_i = now.to_datetime.to_i
 
-          # -30 allows returned timestamps to be 30s ahead, 900 means they can be no older than 15mins
-          if (-30..900) === (now_i - stamp_i)
-            return true
-          else
-            raise "RequestExpiredError\nRequest stamp: #{stamp}\nNow stamp: #{now}\nDifference: #{now_i - stamp_i}"
-          end
+          ## -30 allows returned timestamps to be 30s ahead, 900 means they can be no older than 15mins
+          #if (-30..900) === (now_i - stamp_i)
+          #  return true
+          #else
+          #  raise "RequestExpiredError\nRequest stamp: #{stamp}\nNow stamp: #{now}\nDifference: #{now_i - stamp_i}"
+          #end
         end
 
         def request_type_ok?
