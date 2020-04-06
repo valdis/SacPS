@@ -7,7 +7,7 @@ module SacPS
         include SacPS::Auth::Citadele
 
         attr_accessor :identifier, :return_url, :xml, :form_fields, :uuid, :unsigned_xml_part, :digest, :signed_info, :signature,
-          :timestamp, :request, :version, :language
+          :timestamp, :request, :version, :language, :location
 
         def initialize
           SacPS::Auth::Citadele.validate_config!
@@ -16,8 +16,9 @@ module SacPS
 
           @timestamp = Time.now.strftime("%Y%m%d%H%M%S%3N") # "20030905175959000"
           @request = "AUTHREQ"
-          @version = "3.0"
+          @version = "6.0"
           @language = "LV"
+          @location = "LV"
           @uuid = SecureRandom.uuid # "7387bf5b-fa27-4fdd-add6-a6bfb2599f77"
 
           @xml = return_signed_request_xml
